@@ -1,33 +1,39 @@
-import os
 import joblib
 import numpy as np
 
 from app.models.prediction_history import PredictionHistory
 from app.services.traffic_alert_service import generate_alert_for_prediction
 from app.services.ai_recommendation_service import build_recommendation
+from app.utils.model_loader import ensure_model_files
 
-BASE_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
 
-ML_DIR = os.path.join(BASE_DIR, "ml")
+# --------------------------------------------------------------------------
+# Load ML model + encoders
+#
+# Local development:
+#   Uses backend/ml/*.pkl files if they already exist.
+#
+# Production:
+#   If those files are missing, ensure_model_files() downloads them from
+#   the configured private Hugging Face model repository.
+# --------------------------------------------------------------------------
 
-# Load model
+model_files = ensure_model_files()
+
 model = joblib.load(
-    os.path.join(ML_DIR, "traffic_model.pkl")
+    model_files["traffic_model.pkl"]
 )
 
-# Load encoders
 holiday_encoder = joblib.load(
-    os.path.join(ML_DIR, "holiday_encoder.pkl")
+    model_files["holiday_encoder.pkl"]
 )
 
 weather_encoder = joblib.load(
-    os.path.join(ML_DIR, "weather_encoder.pkl")
+    model_files["weather_encoder.pkl"]
 )
 
 description_encoder = joblib.load(
-    os.path.join(ML_DIR, "weather_description_encoder.pkl")
+    model_files["weather_description_encoder.pkl"]
 )
 
 
@@ -68,19 +74,33 @@ IDEAL_SPEED_KMH = 60.0
 
 
 def _travel_stats(congestion: str, distance_km):
-    """Returns (average_speed_kmh, travel_time_minutes, delay_minutes)
-    for a prediction, using the same congestion-tier speed assumptions
-    already used by frontend/src/pages/Prediction.jsx to display this
-    exact information for the same prediction."""
+    """
+    Returns:
+        (
+            average_speed_kmh,
+            travel_time_minutes,
+            delay_minutes
+        )
+
+    Uses the same congestion-tier speed assumptions already used by
+    frontend/src/pages/Prediction.jsx.
+    """
 
     average_speed = CONGESTION_AVERAGE_SPEED_KMH.get(
-        congestion, IDEAL_SPEED_KMH
+        congestion,
+        IDEAL_SPEED_KMH
     )
 
     distance_km = distance_km or 0.0
 
-    travel_time = (distance_km / average_speed) * 60
-    ideal_time = (distance_km / IDEAL_SPEED_KMH) * 60
+    travel_time = (
+        distance_km / average_speed
+    ) * 60
+
+    ideal_time = (
+        distance_km / IDEAL_SPEED_KMH
+    ) * 60
+
     delay = travel_time - ideal_time
 
     return (
@@ -110,6 +130,14 @@ def predict_traffic(data, db, current_user):
         [data.weather_description]
     )[0]
 
+    # ------------------------------------------------------------------
+    # Prepare ML feature vector
+    #
+    # IMPORTANT:
+    # This feature order must remain exactly the same as the order used
+    # while training traffic_model.pkl.
+    # ------------------------------------------------------------------
+
     features = np.array([[
         holiday,
         data.temp,
@@ -124,100 +152,215 @@ def predict_traffic(data, db, current_user):
         data.weekday
     ]])
 
+    # ------------------------------------------------------------------
+    # Traffic prediction
+    # ------------------------------------------------------------------
+
     prediction = model.predict(features)
 
-    predicted_value = int(prediction[0])
-
-    # Confidence proxy: RandomForestRegressor exposes each tree's
-    # prediction via model.estimators_. A tight spread across trees means
-    # the ensemble agrees (high confidence); a wide spread means the
-    # trees disagree (low confidence). This is a standard technique for
-    # estimating uncertainty from tree ensembles when the model doesn't
-    # natively expose prediction probabilities (regression, not
-    # classification).
-    tree_predictions = np.array([
-        tree.predict(features)[0] for tree in model.estimators_
-    ])
-    mean_tree_pred = float(tree_predictions.mean())
-    std_tree_pred = float(tree_predictions.std())
-    relative_dispersion = std_tree_pred / max(mean_tree_pred, 1.0)
-    confidence = round(
-        max(50.0, min(99.0, 100 - relative_dispersion * 100)), 1
+    predicted_value = int(
+        prediction[0]
     )
 
+    # ------------------------------------------------------------------
+    # Confidence proxy
+    #
+    # RandomForestRegressor does not expose classification probabilities.
+    # We therefore use the spread of predictions across the individual
+    # trees as an uncertainty proxy:
+    #
+    # smaller spread = higher confidence
+    # larger spread  = lower confidence
+    # ------------------------------------------------------------------
+
+    tree_predictions = np.array([
+        tree.predict(features)[0]
+        for tree in model.estimators_
+    ])
+
+    mean_tree_pred = float(
+        tree_predictions.mean()
+    )
+
+    std_tree_pred = float(
+        tree_predictions.std()
+    )
+
+    relative_dispersion = (
+        std_tree_pred
+        / max(mean_tree_pred, 1.0)
+    )
+
+    confidence = round(
+        max(
+            50.0,
+            min(
+                99.0,
+                100
+                - relative_dispersion * 100
+            )
+        ),
+        1
+    )
+
+    # ------------------------------------------------------------------
+    # Congestion classification
+    # ------------------------------------------------------------------
+
     if predicted_value < 2500:
+
         congestion = "Low"
+
     elif predicted_value < 4500:
+
         congestion = "Medium"
+
     else:
+
         congestion = "High"
 
     route = "Best Route"
 
+    # ------------------------------------------------------------------
+    # Travel statistics
+    # ------------------------------------------------------------------
+
     average_speed, travel_time, delay = _travel_stats(
-        congestion, data.distance
+        congestion,
+        data.distance
     )
 
+    # ------------------------------------------------------------------
+    # Save prediction history
+    # ------------------------------------------------------------------
+
     history = PredictionHistory(
+
         user_id=current_user.id,
 
         holiday=data.holiday,
+
         temp=data.temp,
+
         rain_1h=data.rain_1h,
+
         snow_1h=data.snow_1h,
+
         clouds_all=data.clouds_all,
+
         weather_main=data.weather_main,
+
         weather_description=data.weather_description,
+
         hour=data.hour,
+
         day=data.day,
+
         month=data.month,
+
         weekday=data.weekday,
+
         distance=data.distance,
+
         source=data.source,
+
         destination=data.destination,
+
         source_lat=data.source_lat,
+
         source_lng=data.source_lng,
+
         destination_lat=data.destination_lat,
+
         destination_lng=data.destination_lng,
+
         predicted_traffic=predicted_value,
+
         confidence=confidence,
+
         congestion=congestion,
+
         recommended_route=route,
+
         average_speed=average_speed,
+
         travel_time=travel_time,
+
         delay=delay,
     )
 
     db.add(history)
+
     db.commit()
+
     db.refresh(history)
 
-    # Automatic alert generation - no manual alert creation by users.
+    # ------------------------------------------------------------------
+    # Automatic alert generation
+    #
+    # No manual alert creation by users.
+    # ------------------------------------------------------------------
+
     alert = generate_alert_for_prediction(
+
         db,
+
         user_id=current_user.id,
+
         prediction=history,
+
         data=data,
+
         congestion=congestion,
+
         recommended_route=route,
+
         predicted_value=predicted_value,
     )
 
-    # Rule-based AI recommendation, built from the alert above so nothing
-    # is recomputed - see app.services.ai_recommendation_service.
+    # ------------------------------------------------------------------
+    # AI / recommendation layer
+    #
+    # Currently uses your existing recommendation service.
+    # If you later switch to recommendation_orchestrator.py for the
+    # real OpenAI-based recommendation feature, only this import should
+    # change.
+    # ------------------------------------------------------------------
+
     recommendation = build_recommendation(
+
         alert=alert,
+
         data=data,
+
         congestion=congestion,
+
         confidence=confidence,
+
         recommended_route=route,
     )
 
+    # ------------------------------------------------------------------
+    # API response
+    # ------------------------------------------------------------------
+
     return {
-        "predicted_traffic": predicted_value,
-        "congestion": congestion,
-        "recommended_route": route,
-        "confidence": confidence,
-        "alert": alert,
-        "ai_recommendation": recommendation
+
+        "predicted_traffic":
+            predicted_value,
+
+        "congestion":
+            congestion,
+
+        "recommended_route":
+            route,
+
+        "confidence":
+            confidence,
+
+        "alert":
+            alert,
+
+        "ai_recommendation":
+            recommendation,
     }
