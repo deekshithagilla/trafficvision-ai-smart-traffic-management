@@ -168,7 +168,10 @@ function Heatmap() {
                             zoom={DEFAULT_ZOOM}
                             style={{ height: "650px", borderRadius: "15px" }}
                         >
-                            <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+                            <TileLayer
+                                attribution='&copy; OpenStreetMap contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
 
                             <HeatLayer points={points} />
                             <FitToPoints points={points} />
