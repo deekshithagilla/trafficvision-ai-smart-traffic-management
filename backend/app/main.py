@@ -35,6 +35,13 @@ FRONTEND_URL = os.getenv(
     "http://localhost:5173"
 )
 
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:5173"
+)
+
+print("FRONTEND_URL loaded by backend:", repr(FRONTEND_URL))
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
