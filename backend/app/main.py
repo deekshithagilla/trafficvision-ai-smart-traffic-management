@@ -27,6 +27,38 @@ from app.exceptions.handlers import (
 from app.models import *  # noqa: F401,F403
  
 Base.metadata.create_all(bind=engine)
+
+def run_migrations():
+    import glob
+    from sqlalchemy import text
+    from app.database import SessionLocal
+    
+    # migrations/ is at the repo root level
+    migrations_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "migrations")
+    )
+    
+    migration_files = sorted(glob.glob(os.path.join(migrations_dir, "*.sql")))
+    if not migration_files:
+        print(f"No migrations found in: {migrations_dir}")
+        return
+        
+    db = SessionLocal()
+    try:
+        for filepath in migration_files:
+            print(f"Running database migration DDL: {os.path.basename(filepath)}...")
+            with open(filepath, "r", encoding="utf-8") as f:
+                sql_content = f.read()
+                db.execute(text(sql_content))
+        db.commit()
+        print("All DDL migrations executed successfully.")
+    except Exception as e:
+        db.rollback()
+        print(f"DDL migration execution warning/error: {e}")
+    finally:
+        db.close()
+
+run_migrations()
  
 app = FastAPI(title="TrafficVision AI")
  
