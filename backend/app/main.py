@@ -41,20 +41,36 @@ def run_migrations():
     migration_files = sorted(glob.glob(os.path.join(migrations_dir, "*.sql")))
     if not migration_files:
         print(f"No migrations found in: {migrations_dir}")
-        return
         
     db = SessionLocal()
     try:
-        for filepath in migration_files:
-            print(f"Running database migration DDL: {os.path.basename(filepath)}...")
-            with open(filepath, "r", encoding="utf-8") as f:
-                sql_content = f.read()
-                db.execute(text(sql_content))
-        db.commit()
-        print("All DDL migrations executed successfully.")
+        if migration_files:
+            for filepath in migration_files:
+                print(f"Running database migration DDL: {os.path.basename(filepath)}...")
+                with open(filepath, "r", encoding="utf-8") as f:
+                    sql_content = f.read()
+                    db.execute(text(sql_content))
+            db.commit()
+            print("All DDL migrations executed successfully.")
+            
+        # Bootstrap super_admin if requested in env
+        super_admin_email = os.getenv("SUPER_ADMIN_EMAIL")
+        if super_admin_email:
+            from app.models.user import User
+            from app.constants import SUPER_ADMIN
+            user = db.query(User).filter(User.email == super_admin_email).first()
+            if user:
+                if user.role != SUPER_ADMIN:
+                    user.role = SUPER_ADMIN
+                    db.commit()
+                    print(f"AUTOMATIC BOOTSTRAP: Promoted {super_admin_email} to super_admin.")
+                else:
+                    print(f"AUTOMATIC BOOTSTRAP: {super_admin_email} is already a super_admin.")
+            else:
+                print(f"AUTOMATIC BOOTSTRAP: User {super_admin_email} not found yet in database. Register first.")
     except Exception as e:
         db.rollback()
-        print(f"DDL migration execution warning/error: {e}")
+        print(f"Database initialization warning/error: {e}")
     finally:
         db.close()
 
