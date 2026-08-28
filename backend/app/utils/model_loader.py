@@ -48,18 +48,22 @@ def ensure_model_files():
             continue
 
         # Production download
-        if not HF_TOKEN:
-            raise RuntimeError(
-                f"{filename} is missing and HF_TOKEN is not configured."
+        print(f"Downloading {filename} from Hugging Face (Repo: {HF_MODEL_REPO})...")
+        try:
+            downloaded_path = hf_hub_download(
+                repo_id=HF_MODEL_REPO,
+                filename=filename,
+                token=HF_TOKEN if HF_TOKEN else None,
             )
-
-        print(f"Downloading {filename} from Hugging Face...")
-
-        downloaded_path = hf_hub_download(
-            repo_id=HF_MODEL_REPO,
-            filename=filename,
-            token=HF_TOKEN,
-        )
+        except Exception as e:
+            if not HF_TOKEN:
+                raise RuntimeError(
+                    f"Failed to download {filename} from public repository. "
+                    f"If the repository is private, please configure HF_TOKEN. Error: {e}"
+                ) from e
+            raise RuntimeError(
+                f"Failed to download {filename} from Hugging Face repository. Error: {e}"
+            ) from e
 
         resolved_paths[filename] = downloaded_path
 
