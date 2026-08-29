@@ -55,11 +55,11 @@ def send_reset_email(to_email: str, token: str) -> None:
     message["To"] = to_email
 
     if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.sendmail(MAIL_FROM, [to_email], message.as_string())
     else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             if MAIL_STARTTLS:
                 server.starttls()
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
@@ -125,11 +125,11 @@ def send_accident_risk_email(
     message["To"] = to_email
 
     if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.sendmail(MAIL_FROM, [to_email], message.as_string())
     else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             if MAIL_STARTTLS:
                 server.starttls()
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
@@ -177,11 +177,11 @@ def send_admin_invitation_email(to_email: str, token: str) -> None:
     message["To"] = to_email
 
     if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.sendmail(MAIL_FROM, [to_email], message.as_string())
     else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
             if MAIL_STARTTLS:
                 server.starttls()
             server.login(MAIL_USERNAME, MAIL_PASSWORD)

@@ -429,13 +429,23 @@ def generate_alert_for_prediction(
     db.commit()
     db.refresh(alert)
 
-    # Automatic email notification for high/critical accident risk.
-    # Deterministic threshold check only - see _maybe_send_accident_risk_email.
-    # This never raises, so prediction/alert creation above is unaffected
-    # even if SMTP is down or misconfigured.
-    _maybe_send_accident_risk_email(
-        db, alert, user_id, data, predicted_value
+    # Run email sending in a background thread so the user gets prediction results instantly!
+    import threading
+    
+    data_dict = {
+        "source": getattr(data, "source", "Unknown"),
+        "destination": getattr(data, "destination", "Unknown"),
+        "weather_main": getattr(data, "weather_main", "Unknown"),
+        "weather_description": getattr(data, "weather_description", "Unknown"),
+        "hour": getattr(data, "hour", 12),
+    }
+    
+    t = threading.Thread(
+        target=_send_email_async_worker,
+        args=(alert.id, user_id, predicted_value, data_dict),
+        daemon=True
     )
+    t.start()
 
     return alert
 
@@ -505,3 +515,30 @@ def delete_alert(db: Session, alert_id: int, user_id: int) -> bool:
     db.delete(alert)
     db.commit()
     return True
+
+
+def _send_email_async_worker(alert_id: int, user_id: Optional[int], predicted_value: int, data_dict: dict) -> None:
+    """Async background worker that opens a fresh DB session and runs the
+    accident risk email verification and send logic. This runs on a separate
+    thread to prevent the main HTTP request from waiting on SMTP connections.
+    """
+    from app.database import SessionLocal
+    from app.models.traffic_alert import TrafficAlert
+    
+    db = SessionLocal()
+    try:
+        alert = db.query(TrafficAlert).filter(TrafficAlert.id == alert_id).first()
+        if not alert:
+            return
+            
+        class MockData:
+            def __init__(self, d):
+                for k, v in d.items():
+                    setattr(self, k, v)
+                    
+        data = MockData(data_dict)
+        _maybe_send_accident_risk_email(db, alert, user_id, data, predicted_value)
+    except Exception as e:
+        logger.exception("Error in background email worker: %s", e)
+    finally:
+        db.close()
