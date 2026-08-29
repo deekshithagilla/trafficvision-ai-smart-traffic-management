@@ -110,7 +110,7 @@ function Heatmap() {
                     minHeight: "100vh",
                 }}
             >
-                <h1 style={{ color: "#1e3a8a", marginBottom: "5px" }}>
+                <h1 style={{ color: "#1e3a8a", marginBottom: "5px", fontSize: "36px", fontWeight: "700" }}>
                     🔥 Traffic Congestion Heatmap
                 </h1>
                 <p style={{ color: "#64748b", marginBottom: "25px" }}>

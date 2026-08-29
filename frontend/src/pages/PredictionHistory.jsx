@@ -66,7 +66,9 @@ function PredictionHistory() {
                     <h1
                         style={{
                             color: "#1e3a8a",
-                            marginBottom: "25px"
+                            marginBottom: "25px",
+                            fontSize: "36px",
+                            fontWeight: "700"
                         }}
                     >
                         📜 Prediction History

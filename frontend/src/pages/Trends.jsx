@@ -73,7 +73,7 @@ function Trends() {
             <Navbar />
 
             <div style={{ padding: "30px", background: "#f5f7fb", minHeight: "100vh" }}>
-                <h1 style={{ color: "#1e3a8a", marginBottom: "5px" }}>📈 Traffic Trend Analysis</h1>
+                <h1 style={{ color: "#1e3a8a", marginBottom: "5px", fontSize: "36px", fontWeight: "700" }}>📈 Traffic Trend Analysis</h1>
                 <p style={{ color: "#64748b", marginBottom: "30px" }}>
                     Daily, monthly, and peak-hour traffic patterns from your prediction history.
                 </p>

@@ -135,7 +135,9 @@ function TrafficList() {
                     <h1
                         style={{
                             color: "#1e3a8a",
-                            marginBottom: "5px"
+                            marginBottom: "5px",
+                            fontSize: "36px",
+                            fontWeight: "700"
                         }}
                     >
                         🚦 Traffic Records

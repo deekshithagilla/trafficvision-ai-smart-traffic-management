@@ -123,7 +123,7 @@ function Alerts() {
                 }}
             >
                 <div style={{ marginBottom: "8px" }}>
-                    <h1 style={{ color: "#1e3a8a", margin: 0 }}>🚨 Traffic Alerts</h1>
+                    <h1 style={{ color: "#1e3a8a", margin: 0, fontSize: "36px", fontWeight: "700" }}>🚨 Traffic Alerts</h1>
                     <p style={{ color: "#64748b", marginTop: "6px" }}>
                         Alerts are generated automatically from live predictions —
                         filter by severity, category, or search a route below.

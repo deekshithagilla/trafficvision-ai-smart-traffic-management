@@ -231,7 +231,7 @@ function AdminDashboard() {
 
             <div style={{ padding: "30px 35px" }}>
 
-                <h1 style={{ color: "#1e3a8a", marginBottom: "6px" }}>
+                <h1 style={{ color: "#1e3a8a", marginBottom: "6px", fontSize: "36px", fontWeight: "700" }}>
                     🛡️ Admin Dashboard
                 </h1>
 

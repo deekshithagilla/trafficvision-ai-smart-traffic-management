@@ -135,6 +135,8 @@ function Profile() {
                     style={{
                         color: "#1e3a8a",
                         marginBottom: "5px",
+                        fontSize: "36px",
+                        fontWeight: "700"
                     }}
                 >
                     👤 My Profile
