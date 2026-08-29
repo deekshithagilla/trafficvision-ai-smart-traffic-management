@@ -78,4 +78,31 @@ export async function restoreUser(id) {
     return response.data;
  
 }
+
+export async function promoteUser(id) {
+    const response = await api.post(
+        `/super-admin/promote/${id}`,
+        {},
+        authHeader()
+    );
+    return response.data;
+}
+
+export async function demoteUser(id) {
+    const response = await api.post(
+        `/super-admin/demote/${id}`,
+        {},
+        authHeader()
+    );
+    return response.data;
+}
+
+export async function inviteAdmin(email) {
+    const response = await api.post(
+        `/super-admin/invitations`,
+        { email },
+        authHeader()
+    );
+    return response.data;
+}
  

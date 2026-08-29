@@ -5,7 +5,10 @@ import api from "../services/api";
 import {
     getUsers,
     suspendUser,
-    restoreUser
+    restoreUser,
+    promoteUser,
+    demoteUser,
+    inviteAdmin
 } from "../services/adminService";
 import { toast } from "react-toastify";
 
@@ -36,6 +39,9 @@ function AdminDashboard() {
     const [status, setStatus] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [search, setSearch] = useState("");
+
+    const [inviteEmail, setInviteEmail] = useState("");
+    const [inviting, setInviting] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(null);
 
@@ -150,6 +156,69 @@ function AdminDashboard() {
         }
     }
 
+    async function handlePromote(userId) {
+        const confirmPromote = window.confirm(
+            "Promote this user to Admin?"
+        );
+        if (!confirmPromote) return;
+
+        try {
+            setBusyId(userId);
+            await promoteUser(userId);
+            toast.success("User promoted to Admin.");
+            loadUsers();
+        } catch (error) {
+            console.log(error);
+            toast.error(
+                error.response?.data?.detail || "Failed to promote user."
+            );
+        } finally {
+            setBusyId(null);
+        }
+    }
+
+    async function handleDemote(userId) {
+        const confirmDemote = window.confirm(
+            "Demote this Admin back to Operator?"
+        );
+        if (!confirmDemote) return;
+
+        try {
+            setBusyId(userId);
+            await demoteUser(userId);
+            toast.success("Admin demoted to Operator.");
+            loadUsers();
+        } catch (error) {
+            console.log(error);
+            toast.error(
+                error.response?.data?.detail || "Failed to demote user."
+            );
+        } finally {
+            setBusyId(null);
+        }
+    }
+
+    async function handleInvite() {
+        if (!inviteEmail.trim()) {
+            toast.error("Please enter a valid email.");
+            return;
+        }
+
+        try {
+            setInviting(true);
+            await inviteAdmin(inviteEmail.trim());
+            toast.success("Invitation sent successfully!");
+            setInviteEmail("");
+        } catch (error) {
+            console.log(error);
+            toast.error(
+                error.response?.data?.detail || "Failed to send invitation."
+            );
+        } finally {
+            setInviting(false);
+        }
+    }
+
     const totalPages = Math.max(Math.ceil(total / PAGE_SIZE), 1);
 
     if (loading && users.length === 0) {
@@ -169,6 +238,57 @@ function AdminDashboard() {
                 <p style={{ color: "#64748b", marginBottom: "24px" }}>
                     User management - search, filter, suspend, and restore accounts.
                 </p>
+
+                {/* Invite Admin Form (Super Admin only) */}
+                {currentRole === "super_admin" && (
+                    <div
+                        style={{
+                            background: "white",
+                            borderRadius: "12px",
+                            padding: "16px 20px",
+                            marginBottom: "24px",
+                            display: "flex",
+                            gap: "12px",
+                            alignItems: "center",
+                            boxShadow: "0 4px 15px rgba(0,0,0,.03)",
+                            flexWrap: "wrap"
+                        }}
+                    >
+                        <span style={{ fontWeight: 700, color: "#1e3a8a", fontSize: "15px" }}>
+                            ✉️ Invite New Administrator:
+                        </span>
+                        <input
+                            type="email"
+                            placeholder="Enter email address to invite..."
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                            style={{
+                                padding: "8px 14px",
+                                borderRadius: "8px",
+                                border: "1px solid #cbd5e1",
+                                minWidth: "280px",
+                                flex: 1
+                            }}
+                        />
+                        <button
+                            onClick={handleInvite}
+                            disabled={inviting}
+                            style={{
+                                background: "#2563eb",
+                                color: "white",
+                                border: "none",
+                                padding: "10px 18px",
+                                borderRadius: "8px",
+                                cursor: inviting ? "not-allowed" : "pointer",
+                                fontWeight: 700,
+                                opacity: inviting ? 0.7 : 1,
+                                transition: ".3s"
+                            }}
+                        >
+                            {inviting ? "Sending..." : "Send Invitation"}
+                        </button>
+                    </div>
+                )}
 
                 {/* Filters */}
                 <div
@@ -289,7 +409,7 @@ function AdminDashboard() {
                                             {u.status}
                                         </span>
                                     </td>
-                                    <td style={{ padding: "12px 18px" }}>
+                                    <td style={{ padding: "12px 18px", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
                                         {canActOn(u) && u.status === "active" && (
                                             <button
                                                 onClick={() => handleSuspend(u.id)}
@@ -326,7 +446,44 @@ function AdminDashboard() {
                                             </button>
                                         )}
 
-                                        {!canActOn(u) && (
+                                        {/* Promote / Demote Actions (Super Admin only) */}
+                                        {currentRole === "super_admin" && u.role === "operator" && (
+                                            <button
+                                                onClick={() => handlePromote(u.id)}
+                                                disabled={busyId === u.id}
+                                                style={{
+                                                    background: "#2563eb",
+                                                    color: "white",
+                                                    border: "none",
+                                                    padding: "8px 14px",
+                                                    borderRadius: "8px",
+                                                    cursor: "pointer",
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Promote
+                                            </button>
+                                        )}
+
+                                        {currentRole === "super_admin" && u.role === "admin" && (
+                                            <button
+                                                onClick={() => handleDemote(u.id)}
+                                                disabled={busyId === u.id}
+                                                style={{
+                                                    background: "#d97706",
+                                                    color: "white",
+                                                    border: "none",
+                                                    padding: "8px 14px",
+                                                    borderRadius: "8px",
+                                                    cursor: "pointer",
+                                                    fontWeight: 600
+                                                }}
+                                            >
+                                                Demote
+                                            </button>
+                                        )}
+
+                                        {!canActOn(u) && u.role === "super_admin" && (
                                             <span style={{ color: "#94a3b8", fontSize: "13px" }}>
                                                 —
                                             </span>
