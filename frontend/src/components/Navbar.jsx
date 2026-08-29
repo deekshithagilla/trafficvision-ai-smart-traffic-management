@@ -77,30 +77,9 @@ function Navbar() {
                 🚦 TrafficVision AI
             </Link>
 
-            <Link 
-                to="/alerts"
-                style={{
-                    color: "white",
-                    textDecoration: "none",
-                    fontWeight: "600",
-                    fontSize: "18px"
-                }}
-                >
-                    Alerts
-                </Link>
-
-            <Link 
-                to="/heatmap"
-                style={{
-                    color: "white",
-                    textDecoration: "none",
-                    fontWeight: "600",
-                    fontSize: "18px"
-                }}
-                >
-                    🔥 Heatmap
-                </Link>     
             {[
+                { name: "Alerts", path: "/alerts" },
+                { name: "🔥 Heatmap", path: "/heatmap" },
                 { name: "Dashboard", path: "/dashboard" },
                 { name: "Analytics", path: "/analytics" },
                 { name: "Trends", path: "/trends" },
