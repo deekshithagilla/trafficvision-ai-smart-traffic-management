@@ -34,9 +34,14 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
             "Authorization": f"Bearer {resend_key}",
             "Content-Type": "application/json"
         }
-        # On the free tier, Resend onboarding sends from onboarding@resend.dev
+        # Send from custom verified domain if MAIL_FROM is configured (and is not a public domain like gmail.com).
+        # Otherwise, fall back to the default onboarding email onboarding@resend.dev.
+        from_address = "TrafficVision <onboarding@resend.dev>"
+        if MAIL_FROM and "gmail.com" not in MAIL_FROM and "yahoo.com" not in MAIL_FROM:
+            from_address = f"TrafficVision <{MAIL_FROM}>"
+
         payload = {
-            "from": "TrafficVision <onboarding@resend.dev>",
+            "from": from_address,
             "to": to_email,
             "subject": subject,
             "text": body
