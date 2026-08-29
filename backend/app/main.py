@@ -53,21 +53,23 @@ def run_migrations():
             db.commit()
             print("All DDL migrations executed successfully.")
             
-        # Bootstrap super_admin if requested in env
-        super_admin_email = os.getenv("SUPER_ADMIN_EMAIL")
-        if super_admin_email:
+        # Bootstrap super_admin if requested in env (supports multiple comma-separated emails)
+        super_admin_emails = os.getenv("SUPER_ADMIN_EMAIL")
+        if super_admin_emails:
             from app.models.user import User
             from app.constants import SUPER_ADMIN
-            user = db.query(User).filter(User.email == super_admin_email).first()
-            if user:
-                if user.role != SUPER_ADMIN:
-                    user.role = SUPER_ADMIN
-                    db.commit()
-                    print(f"AUTOMATIC BOOTSTRAP: Promoted {super_admin_email} to super_admin.")
+            emails = [e.strip() for e in super_admin_emails.split(",") if e.strip()]
+            for email in emails:
+                user = db.query(User).filter(User.email == email).first()
+                if user:
+                    if user.role != SUPER_ADMIN:
+                        user.role = SUPER_ADMIN
+                        db.commit()
+                        print(f"AUTOMATIC BOOTSTRAP: Promoted {email} to super_admin.")
+                    else:
+                        print(f"AUTOMATIC BOOTSTRAP: {email} is already a super_admin.")
                 else:
-                    print(f"AUTOMATIC BOOTSTRAP: {super_admin_email} is already a super_admin.")
-            else:
-                print(f"AUTOMATIC BOOTSTRAP: User {super_admin_email} not found yet in database. Register first.")
+                    print(f"AUTOMATIC BOOTSTRAP: User {email} not found yet in database. Register first.")
     except Exception as e:
         db.rollback()
         print(f"Database initialization warning/error: {e}")
