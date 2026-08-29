@@ -1,13 +1,15 @@
-"""Reusable helpers for the forgot-password flow: generating a secure
-random token and sending the reset email over Gmail SMTP.
+"""Reusable helpers for the email flows (forgot-password, accident alerts, admin invitations).
 
-Uses only the Python standard library (secrets, smtplib, email) - no new
-third-party dependency is needed for this.
+Supports two email delivery methods:
+1. Resend HTTPS API: Used if RESEND_API_KEY environment variable is configured (works on Railway).
+2. Gmail SMTP: Used as a fallback or for local development.
 """
 
+import os
 import secrets
 import smtplib
 from email.mime.text import MIMEText
+import requests
 
 from app.config import (
     MAIL_USERNAME,
@@ -22,35 +24,37 @@ from app.config import (
 )
 
 
-def generate_reset_token() -> str:
-    """Cryptographically secure, URL-safe token (not a JWT) - storing it
-    directly in the DB lets it be single-use and invalidated just by
-    clearing the column, independent of the login access-token's own
-    expiry policy in app.security."""
+def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
+    """Dispatches email via Resend HTTP API (if configured) or falls back to SMTP."""
+    resend_key = os.getenv("RESEND_API_KEY")
+    if resend_key:
+        print(f"Attempting to send email via Resend API to {to_email}...")
+        url = "https://api.resend.com/emails"
+        headers = {
+            "Authorization": f"Bearer {resend_key}",
+            "Content-Type": "application/json"
+        }
+        # On the free tier, Resend onboarding sends from onboarding@resend.dev
+        payload = {
+            "from": "TrafficVision <onboarding@resend.dev>",
+            "to": to_email,
+            "subject": subject,
+            "text": body
+        }
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=5)
+            if response.status_code in (200, 201):
+                print(f"Email sent successfully to {to_email} via Resend API.")
+                return
+            else:
+                print(f"Resend API error: {response.status_code} - {response.text}. Falling back to SMTP...")
+        except Exception as e:
+            print(f"Resend HTTP API failed: {e}. Falling back to SMTP...")
 
-    return secrets.token_urlsafe(32)
-
-
-def send_reset_email(to_email: str, token: str) -> None:
-    """Sends the password-reset email over Gmail SMTP using the
-    MAIL_* settings from app.config (sourced from .env - never
-    hardcoded)."""
-
-    reset_link = f"{FRONTEND_URL}/reset-password?token={token}"
-
-    body = (
-        "Hello,\n\n"
-        "We received a request to reset your password.\n\n"
-        "Click the link below:\n\n"
-        f"{reset_link}\n\n"
-        "This link expires in 15 minutes.\n\n"
-        "If you did not request this, ignore this email.\n\n"
-        "Regards,\n"
-        "TrafficVision Team"
-    )
-
+    # Fallback SMTP delivery
+    print(f"Attempting to send email via SMTP to {to_email}...")
     message = MIMEText(body, "plain")
-    message["Subject"] = "TrafficVision Password Reset"
+    message["Subject"] = subject
     message["From"] = MAIL_FROM
     message["To"] = to_email
 
@@ -64,6 +68,30 @@ def send_reset_email(to_email: str, token: str) -> None:
                 server.starttls()
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.sendmail(MAIL_FROM, [to_email], message.as_string())
+    print("Email sent successfully via SMTP.")
+
+
+def generate_reset_token() -> str:
+    """Cryptographically secure, URL-safe token (not a JWT)."""
+    return secrets.token_urlsafe(32)
+
+
+def send_reset_email(to_email: str, token: str) -> None:
+    """Sends the password-reset email."""
+    reset_link = f"{FRONTEND_URL}/reset-password?token={token}"
+
+    body = (
+        "Hello,\n\n"
+        "We received a request to reset your password.\n\n"
+        "Click the link below:\n\n"
+        f"{reset_link}\n\n"
+        "This link expires in 15 minutes.\n\n"
+        "If you did not request this, ignore this email.\n\n"
+        "Regards,\n"
+        "TrafficVision Team"
+    )
+
+    _send_email_http_or_smtp(to_email, "TrafficVision Password Reset", body)
 
 
 def send_accident_risk_email(
@@ -80,14 +108,7 @@ def send_accident_risk_email(
     expected_delay: float,
     recommended_route: str,
 ) -> None:
-    """Sends a software-generated accident-risk warning over the same
-    Gmail SMTP configuration as send_reset_email()/send_admin_invitation_email().
-
-    This is a predictive risk notification, never a claim that an
-    accident has actually occurred - the disclaimer at the bottom of the
-    body is mandatory and must not be removed or reworded away.
-    """
-
+    """Sends a software-generated accident-risk warning."""
     subject = (
         "TrafficVision AI \u2014 Critical Traffic Safety Alert"
         if is_critical
@@ -119,41 +140,16 @@ def send_accident_risk_email(
         "TrafficVision Team"
     )
 
-    message = MIMEText(body, "plain")
-    message["Subject"] = subject
-    message["From"] = MAIL_FROM
-    message["To"] = to_email
-
-    if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
-    else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
+    _send_email_http_or_smtp(to_email, subject, body)
 
 
 def generate_invitation_token() -> str:
-    """Same generation approach as generate_reset_token() - a fresh
-    cryptographically secure, URL-safe token. Kept as a separate
-    function (rather than reusing generate_reset_token() directly)
-    so the two token families can evolve independently - e.g. if
-    admin-invitation tokens ever need a different length or format,
-    that change won't silently affect password resets too."""
-
+    """Generates a secure admin invitation token."""
     return secrets.token_urlsafe(32)
 
 
 def send_admin_invitation_email(to_email: str, token: str) -> None:
-    """Sends the admin-invitation email over the same Gmail SMTP
-    configuration as send_reset_email(). The link points at a
-    frontend accept-invitation page (not yet built - that's Step 5)
-    which will collect a name/password and POST them along with this
-    token to POST /auth/accept-invitation."""
-
+    """Sends the admin-invitation email."""
     invitation_link = f"{FRONTEND_URL}/accept-invitation?token={token}"
 
     body = (
@@ -171,18 +167,4 @@ def send_admin_invitation_email(to_email: str, token: str) -> None:
         "TrafficVision Team"
     )
 
-    message = MIMEText(body, "plain")
-    message["Subject"] = "TrafficVision Admin Invitation"
-    message["From"] = MAIL_FROM
-    message["To"] = to_email
-
-    if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
-    else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
+    _send_email_http_or_smtp(to_email, "TrafficVision Admin Invitation", body)
