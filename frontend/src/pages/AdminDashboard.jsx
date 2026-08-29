@@ -45,7 +45,7 @@ function AdminDashboard() {
 
     const [currentUser, setCurrentUser] = useState(null);
 
-    const currentRole = localStorage.getItem("role");
+    const currentRole = currentUser?.role || localStorage.getItem("role");
 
     const getAuthHeader = () => ({
         headers: {
