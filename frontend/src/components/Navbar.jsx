@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
 import NotificationPanel from "./NotificationPanel";
 
 function Navbar() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const role = localStorage.getItem("role");
     const [user, setUser] = useState(null);
@@ -44,8 +45,10 @@ function Navbar() {
         textDecoration: "none",
         fontWeight: "600",
         padding: "10px 16px",
-        borderRadius: "10px",
-        transition: "all .3s ease"
+        borderRadius: "8px",
+        transition: "all .25s ease",
+        display: "inline-flex",
+        alignItems: "center"
     };
 
     return (
@@ -92,22 +95,37 @@ function Navbar() {
                 ...(role === "admin" || role === "super_admin"
                     ? [{ name: "🛡️ Admin Dashboard", path: "/admin" }]
                     : [])
-            ].map((item) => (
-                <Link
-                    key={item.name}
-                    to={item.path}
-                    style={navLinkStyle}
-                    onMouseEnter={(e) => {
-                        e.target.style.background =
-                            "rgba(255,255,255,.18)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.target.style.background = "transparent";
-                    }}
-                >
-                    {item.name}
-                </Link>
-            ))}
+            ].map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                    <Link
+                        key={item.name}
+                        to={item.path}
+                        style={{
+                            ...navLinkStyle,
+                            fontWeight: isActive ? "700" : "600",
+                            background: isActive ? "rgba(255, 255, 255, 0.24)" : "transparent",
+                            borderBottom: isActive ? "3px solid #ffffff" : "3px solid transparent",
+                            boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.18)" : "none",
+                            borderRadius: isActive ? "8px 8px 3px 3px" : "8px"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isActive) {
+                                e.currentTarget.style.background = "rgba(255,255,255,.18)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isActive) {
+                                e.currentTarget.style.background = "transparent";
+                            } else {
+                                e.currentTarget.style.background = "rgba(255, 255, 255, 0.24)";
+                            }
+                        }}
+                    >
+                        {item.name}
+                    </Link>
+                );
+            })}
 
             <div
                 style={{
