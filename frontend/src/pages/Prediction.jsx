@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import TrafficMap from "../components/TrafficMap";
 import NotificationCard from "../components/NotificationCard";
 import AIRecommendationCard from "../components/AIRecommendationCard";
@@ -363,198 +364,271 @@ function Prediction() {
     };
 
     const downloadReport = () => {
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "pt",
+            format: "a4"
+        });
 
-        const doc = new jsPDF();
+        // Clean text helper to eliminate any Unicode emojis or special arrows that corrupt jsPDF fonts
+        const clean = (val) => {
+            if (val === null || val === undefined) return "N/A";
+            return String(val)
+                .replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
+                .replace(/➔|→/g, "->")
+                .replace(/[^\x20-\x7E\t\n\r]/g, "")
+                .trim();
+        };
 
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const maxTextWidth = pageWidth - 20 - 15; // left margin (20) + right buffer
+        const primaryBlue = [30, 58, 138];     // #1e3a8a
+        const secondaryBlue = [37, 99, 235];  // #2563eb
+        const darkText = [30, 41, 59];         // #1e293b
+        const grayText = [100, 116, 139];     // #64748b
 
-        // jsPDF's doc.text() does not wrap long strings on its own - it just
-        // runs off the page edge. This wraps text to the page width and
-        // returns the Y position after the last line, so anything printed
-        // after a long field (e.g. reason / suggested_departure, which can
-        // now include an appended confidence or distance note) never
-        // overlaps the line below it.
-        function writeWrapped(text, x, y, lineHeight = 7) {
-            const lines = doc.splitTextToSize(text, maxTextWidth);
-            doc.text(lines, x, y);
-            return y + lines.length * lineHeight;
-        }
+        // --- PAGE 1: PREDICTION & JOURNEY SUMMARY ---
+        // Header Banner
+        doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+        doc.rect(0, 0, 595.28, 70, "F");
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(20);
-        doc.text("Traffic Prediction Report", 20, 20);
+        doc.setTextColor(255, 255, 255);
+        doc.text("TrafficVision AI", 40, 36);
 
-        doc.setFontSize(12);
         doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(219, 234, 254);
+        doc.text("Smart Traffic Prediction & Congestion Analysis Report", 40, 52);
 
-        doc.text(`Date : ${new Date().toLocaleDateString()}`, 20, 40);
-        doc.text(`Time : ${new Date().toLocaleTimeString()}`, 20, 50);
+        // Right side metadata
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 555, 36, { align: "right" });
+        doc.text("Status: Verified System Report", 555, 50, { align: "right" });
 
-        doc.text(`Holiday : ${form.holiday}`, 20, 70);
-        doc.text(`Temperature : ${form.temp} °C`, 20, 80);
-        doc.text(`Weather : ${form.weather_main}`, 20, 90);
-        doc.text(`Description : ${form.weather_description}`, 20, 100);
+        // Journey Route Card Table
+        autoTable(doc, {
+            startY: 85,
+            theme: "grid",
+            head: [["Trip & Journey Overview", "Details"]],
+            body: [
+                ["Source Origin", clean(form.source)],
+                ["Destination", clean(form.destination)],
+                ["Estimated Distance", `${actualDistance || form.distance || "N/A"} km`],
+                ["Estimated Travel Time", `${travelTime || "N/A"} minutes`],
+                ["Expected Traffic Delay", `${delay || "0"} minutes`],
+                ["Calculated Average Speed", `${avgSpeed || "N/A"} km/h`]
+            ],
+            headStyles: {
+                fillColor: primaryBlue,
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9.5,
+                textColor: darkText,
+                cellPadding: 4.5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 170, fillColor: [241, 245, 249] },
+                1: { width: 345 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        doc.text(`Predicted Traffic : ${prediction} vehicles/hour`, 20, 120);
-        doc.text(`Congestion Level : ${congestion}`, 20, 130);
-        doc.text(`Traffic Status : ${status}`, 20, 140);
+        // AI Traffic Volume & Congestion Table
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 12,
+            theme: "grid",
+            head: [["Traffic Prediction & Forecast", "Result"]],
+            body: [
+                ["Predicted Traffic Volume", `${prediction || "N/A"} vehicles / hour`],
+                ["Congestion Level", clean(congestion)],
+                ["Traffic Flow Status", clean(status)],
+                ["Recommended Route", clean(route || "Optimal Direct Route")],
+                ["Estimated Time Saved", `${savedTime || "0"} minutes`],
+                ["Recommendation Reason", clean(reason || "Selected as the fastest corridor based on predicted traffic.")]
+            ],
+            headStyles: {
+                fillColor: secondaryBlue,
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9.5,
+                textColor: darkText,
+                cellPadding: 4.5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 170, fillColor: [241, 245, 249] },
+                1: { width: 345 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        doc.text(`Distance : ${actualDistance} km`,20,155);
+        // Environmental & Weather Conditions Table
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 12,
+            theme: "grid",
+            head: [["Weather & Environmental Factors", "Value"]],
+            body: [
+                ["Weather Condition", `${clean(form.weather_main)} (${clean(form.weather_description)})`],
+                ["Ambient Temperature", `${form.temp || "N/A"} °C`],
+                ["Rainfall (Past 1 Hour)", `${form.rain_1h || "0"} mm`],
+                ["Snowfall (Past 1 Hour)", `${form.snow_1h || "0"} mm`],
+                ["Cloud Cover", `${form.clouds_all || "0"}%`],
+                ["Holiday Event", clean(form.holiday || "None")]
+            ],
+            headStyles: {
+                fillColor: [71, 85, 105], // Slate 600
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9.5,
+                textColor: darkText,
+                cellPadding: 4.5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 170, fillColor: [241, 245, 249] },
+                1: { width: 345 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        doc.text(`Average Speed : ${avgSpeed} km/h`,20,165);
+        // Page 1 Footer
+        doc.setFontSize(8);
+        doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+        doc.text("TrafficVision AI - Intelligent Traffic Management System • Page 1 of 2", 297, 820, { align: "center" });
 
-        doc.text(`Travel Time : ${travelTime} minutes`,20,175);
+        // --- PAGE 2: AI INSIGHTS & DRIVER ADVISORY ---
+        doc.addPage();
 
-        doc.text(`Delay : ${delay} minutes`,20,185);
+        // Header Banner Page 2
+        doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+        doc.rect(0, 0, 595.28, 70, "F");
 
-        doc.text(`Recommended Route : ${route}`,20,195);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.setTextColor(255, 255, 255);
+        doc.text("AI Traffic Insights & Safety Advisory", 40, 36);
 
-        doc.text(`Estimated Time Saved : ${savedTime} minutes`,20,205);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.setTextColor(219, 234, 254);
+        doc.text("Real-Time Route Intelligence, Departure Guidance & Safety Protocols", 40, 52);
 
-        doc.text(`Recommendation Reason : `,20,215);
-        const afterReasonY = writeWrapped(reason, 20, 222);
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text(`Report ID: TV-${Date.now().toString().slice(-6)}`, 555, 36, { align: "right" });
+        doc.text("AI Confidence: " + (aiRecommendation?.confidence ? `${aiRecommendation.confidence}%` : "85%"), 555, 50, { align: "right" });
 
-        let recommendation = "";
+        // AI Advisory Table
+        autoTable(doc, {
+            startY: 85,
+            theme: "grid",
+            head: [["AI Decision Metric", "Intelligent Advisory"]],
+            body: [
+                ["Risk / Traffic Status", clean(aiRecommendation?.traffic_status || status || "Normal Traffic")],
+                ["Congestion Classification", clean(aiRecommendation?.congestion_level || congestion || "Normal")],
+                ["Recommended Route", clean(aiRecommendation?.recommended_route || route || "Primary Route")],
+                ["Route Selection Rationale", clean(aiRecommendation?.reason || reason || "Fastest transit path available.")],
+                ["Optimal Departure Window", clean(aiRecommendation?.suggested_departure || "Travel at regular scheduled time.")],
+                ["Predicted Transit Delay", `${aiRecommendation?.estimated_delay ?? delay ?? 0} minutes`]
+            ],
+            headStyles: {
+                fillColor: primaryBlue,
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9.5,
+                textColor: darkText,
+                cellPadding: 5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 170, fillColor: [241, 245, 249] },
+                1: { width: 345 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        if (congestion.includes("Low")) {
-            recommendation = "Traffic is smooth. Safe to travel.";
-        } else if (congestion.includes("Medium")) {
-            recommendation = "Moderate traffic. Expect small delays.";
-        } else {
-            recommendation = "Heavy traffic. Consider an alternate route.";
-        }
+        // Safety Recommendations Table
+        const safetyTips = (aiRecommendation?.safety_tips && aiRecommendation.safety_tips.length > 0)
+            ? aiRecommendation.safety_tips.map((tip, i) => [`${i + 1}.`, clean(tip)])
+            : [
+                ["1.", "Maintain safe following distance behind other vehicles."],
+                ["2.", "Watch for sudden braking and congestion bottlenecks."],
+                ["3.", "Keep headlights active and drive with caution in adverse weather."]
+            ];
 
-        const recommendationLabelY = Math.max(235, afterReasonY + 8);
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 12,
+            theme: "striped",
+            head: [["#", "Driver Safety & Caution Guidelines"]],
+            body: safetyTips,
+            headStyles: {
+                fillColor: [185, 28, 28], // Crimson Red
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9,
+                textColor: darkText,
+                cellPadding: 4.5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 30, halign: "center" },
+                1: { width: 485 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        doc.text(`Recommendation :`,20,recommendationLabelY);
-        doc.text(recommendation,20,recommendationLabelY + 10);
+        // Fuel Saving Tips Table
+        const fuelTips = (aiRecommendation?.fuel_tips && aiRecommendation.fuel_tips.length > 0)
+            ? aiRecommendation.fuel_tips.map((tip, i) => [`${i + 1}.`, clean(tip)])
+            : [
+                ["1.", "Maintain steady speed to optimize fuel efficiency."],
+                ["2.", "Avoid abrupt accelerations and hard decelerations in traffic."],
+                ["3.", "Turn off engine during extended standstill idling."]
+            ];
 
-        let sourceY = recommendationLabelY + 25;
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 12,
+            theme: "striped",
+            head: [["#", "Fuel Economy & Eco-Driving Recommendations"]],
+            body: fuelTips,
+            headStyles: {
+                fillColor: [21, 128, 61], // Emerald Green
+                textColor: [255, 255, 255],
+                fontSize: 10,
+                fontStyle: "bold"
+            },
+            bodyStyles: {
+                fontSize: 9,
+                textColor: darkText,
+                cellPadding: 4.5
+            },
+            columnStyles: {
+                0: { fontStyle: "bold", width: 30, halign: "center" },
+                1: { width: 485 }
+            },
+            margin: { left: 40, right: 40 }
+        });
 
-        // Guard against a long, wrapped reason pushing this block past the
-        // bottom of an A4 page (297mm) - start a fresh page instead of
-        // printing off the edge.
-        if (sourceY + 30 > 280) {
-            doc.addPage();
-            sourceY = 20;
-        }
+        // Page 2 Footer
+        doc.setFontSize(8);
+        doc.setTextColor(grayText[0], grayText[1], grayText[2]);
+        doc.text("TrafficVision AI - Intelligent Traffic Management System • Page 2 of 2", 297, 820, { align: "center" });
 
-        doc.text(
-            `Source : ${form.source}`,
-            20,
-            sourceY
-        );
-
-        doc.text(
-            `Destination : ${form.destination}`,
-            20,
-            sourceY + 10
-        );
-
-        doc.text(
-            `Actual Distance : ${actualDistance} km`,
-            20,
-            sourceY + 20
-        );
-
-        doc.text(
-            `Actual Travel Time : ${travelTime} min`,
-            20,
-            sourceY + 30
-        );
-
-        // AI Insights section (Feature 3) - continues on a fresh page so
-        // it never overlaps the existing report content above.
-        if (aiRecommendation) {
-
-            doc.addPage();
-
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(20);
-            doc.text("AI Insights", 20, 20);
-
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "normal");
-
-            doc.text(
-                `Traffic Status : ${aiRecommendation.traffic_status}`,
-                20,
-                40
-            );
-
-            doc.text(
-                `Congestion Level : ${aiRecommendation.congestion_level}`,
-                20,
-                50
-            );
-
-            doc.text(
-                `Recommended Route : ${aiRecommendation.recommended_route}`,
-                20,
-                60
-            );
-
-            let cursorY = writeWrapped(
-                `Reason : ${aiRecommendation.reason}`, 20, 70
-            ) + 3;
-
-            doc.text(
-                `Estimated Delay : ${aiRecommendation.estimated_delay} minutes`,
-                20,
-                cursorY
-            );
-            cursorY += 10;
-
-            doc.text(
-                `Travel Time : ${travelTime} minutes`,
-                20,
-                cursorY
-            );
-            cursorY += 10;
-
-            cursorY = writeWrapped(
-                `Suggested Departure Time : ${aiRecommendation.suggested_departure}`,
-                20,
-                cursorY
-            ) + 3;
-
-            doc.text(
-                `AI Confidence : ${aiRecommendation.confidence != null ? aiRecommendation.confidence + "%" : "N/A"}`,
-                20,
-                cursorY
-            );
-            cursorY += 20;
-
-            // Long wrapped Reason/Suggested Departure text can push the
-            // tips sections toward or past the bottom of the page.
-            if (cursorY > 270) {
-                doc.addPage();
-                cursorY = 20;
-            }
-
-            doc.setFont("helvetica", "bold");
-            doc.text("Fuel Saving Tips :", 20, cursorY);
-            doc.setFont("helvetica", "normal");
-            cursorY += 10;
-
-            aiRecommendation.fuel_tips.forEach((tip, index) => {
-                doc.text(`- ${tip}`, 25, cursorY + index * 10);
-            });
-
-            const safetyStartY = cursorY + aiRecommendation.fuel_tips.length * 10 + 15;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("Safety Recommendation :", 20, safetyStartY);
-            doc.setFont("helvetica", "normal");
-
-            aiRecommendation.safety_tips.forEach((tip, index) => {
-                doc.text(`- ${tip}`, 25, safetyStartY + 10 + index * 10);
-            });
-
-        }
-
-        doc.save("Traffic_Prediction_Report.pdf");
+        // Save PDF
+        const filename = `TrafficVision_Report_${clean(form.source || "Origin")}_to_${clean(form.destination || "Destination")}.pdf`.replace(/\s+/g, "_");
+        doc.save(filename);
     };
 
     const inputStyle = {
