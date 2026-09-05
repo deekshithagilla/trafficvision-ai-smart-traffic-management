@@ -177,15 +177,10 @@ function Login() {
 
                 {/* Register */}
                 <div className="auth-link">
-
-                    Don't have an account?
-
-                    <br /><br />
-
+                    Don't have an account?{" "}
                     <Link to="/register">
                         Create Account
                     </Link>
-
                 </div>
 
             </div>

@@ -232,10 +232,6 @@ function Register() {
                     <span>OR</span>
                 </div>
 
-                <p className="subtitle">
-                    Sign up securely using your Google account
-                </p>
-
                 <div className="google-login">
 
                     <GoogleLogin
@@ -248,15 +244,10 @@ function Register() {
                 </div>
 
                 <div className="auth-link">
-
-                    Already have an account?
-
-                    <br /><br />
-
+                    Already have an account?{" "}
                     <Link to="/">
                         Login Here
                     </Link>
-
                 </div>
 
             </div>
