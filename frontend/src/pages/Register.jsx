@@ -145,8 +145,17 @@ function Register() {
 
             <div className="auth-card">
 
-                <div className="logo">
-                    🚦
+                <Link to="/" className="back-home-link">
+                    ← Back to Home
+                </Link>
+
+                <div className="auth-logo-wrap">
+                    <Link to="/">
+                        <img
+                            src="/trafficvision-logo.png"
+                            alt="TrafficVision AI - Smarter Roads. Safer Tomorrows."
+                        />
+                    </Link>
                 </div>
 
                 <h1 className="title">
@@ -154,7 +163,7 @@ function Register() {
                 </h1>
 
                 <p className="subtitle">
-                    Join TrafficVision AI
+                    Join TrafficVision AI for smarter commutes and greener cities
                 </p>
 
                 {/* Name */}
@@ -232,10 +241,6 @@ function Register() {
                     <span>OR</span>
                 </div>
 
-                <p className="subtitle">
-                    Sign up securely using your Google account
-                </p>
-
                 <div className="google-login">
 
                     <GoogleLogin
@@ -247,13 +252,10 @@ function Register() {
 
                 </div>
 
-                <div className="auth-link">
+                <div className="auth-link" style={{ marginTop: "18px" }}>
 
-                    Already have an account?
-
-                    <br /><br />
-
-                    <Link to="/">
+                    Already have an account?{" "}
+                    <Link to="/login">
                         Login Here
                     </Link>
 

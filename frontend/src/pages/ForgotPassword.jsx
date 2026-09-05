@@ -53,8 +53,17 @@ function ForgotPassword() {
 
             <div className="auth-card">
 
-                <div className="logo">
-                    🚦
+                <Link to="/" className="back-home-link">
+                    ← Back to Home
+                </Link>
+
+                <div className="auth-logo-wrap">
+                    <Link to="/">
+                        <img
+                            src="/trafficvision-logo.png"
+                            alt="TrafficVision AI - Smarter Roads. Safer Tomorrows."
+                        />
+                    </Link>
                 </div>
 
                 <h1 className="title">
@@ -105,7 +114,8 @@ function ForgotPassword() {
 
                 <div className="auth-link">
 
-                    <Link to="/">
+                    Remember your password?{" "}
+                    <Link to="/login">
                         Back to Login
                     </Link>
 

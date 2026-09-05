@@ -94,16 +94,25 @@ function Login() {
 
             <div className="auth-card">
 
-                <div className="logo">
-                    🚦
+                <Link to="/" className="back-home-link">
+                    ← Back to Home
+                </Link>
+
+                <div className="auth-logo-wrap">
+                    <Link to="/">
+                        <img
+                            src="/trafficvision-logo.png"
+                            alt="TrafficVision AI - Smarter Roads. Safer Tomorrows."
+                        />
+                    </Link>
                 </div>
 
                 <h1 className="title">
-                    TrafficVision AI
+                    Welcome Back
                 </h1>
 
                 <p className="subtitle">
-                    Smart Traffic Prediction System
+                    Sign in to access AI traffic predictions & route intelligence
                 </p>
 
                 {/* Email */}
@@ -141,9 +150,9 @@ function Login() {
                 </div>
 
                 {/* Forgot Password */}
-                <div className="auth-link">
+                <div className="auth-link" style={{ textAlign: "right", marginTop: "-6px", marginBottom: "14px" }}>
 
-                    <Link to="/forgot-password">
+                    <Link to="/forgot-password" style={{ fontSize: "13.5px" }}>
                         Forgot Password?
                     </Link>
 
@@ -176,12 +185,9 @@ function Login() {
                 </div>
 
                 {/* Register */}
-                <div className="auth-link">
+                <div className="auth-link" style={{ marginTop: "18px" }}>
 
-                    Don't have an account?
-
-                    <br /><br />
-
+                    Don't have an account?{" "}
                     <Link to="/register">
                         Create Account
                     </Link>
