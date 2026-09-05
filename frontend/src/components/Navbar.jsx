@@ -102,23 +102,26 @@ function Navbar() {
                         key={item.name}
                         to={item.path}
                         style={{
-                            ...navLinkStyle,
-                            fontWeight: isActive ? "700" : "600",
-                            background: isActive ? "rgba(255, 255, 255, 0.24)" : "transparent",
-                            borderBottom: isActive ? "3px solid #ffffff" : "3px solid transparent",
-                            boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.18)" : "none",
-                            borderRadius: isActive ? "8px 8px 3px 3px" : "8px"
+                            color: isActive ? "#1e3a8a" : "#ffffff",
+                            backgroundColor: isActive ? "#ffffff" : "transparent",
+                            textDecoration: "none",
+                            fontWeight: isActive ? "700" : "500",
+                            fontSize: "14px",
+                            padding: "8px 16px",
+                            borderRadius: "20px",
+                            boxShadow: isActive ? "0 4px 12px rgba(0,0,0,0.16)" : "none",
+                            transition: "all .25s ease",
+                            display: "inline-flex",
+                            alignItems: "center"
                         }}
                         onMouseEnter={(e) => {
                             if (!isActive) {
-                                e.currentTarget.style.background = "rgba(255,255,255,.18)";
+                                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.16)";
                             }
                         }}
                         onMouseLeave={(e) => {
                             if (!isActive) {
-                                e.currentTarget.style.background = "transparent";
-                            } else {
-                                e.currentTarget.style.background = "rgba(255, 255, 255, 0.24)";
+                                e.currentTarget.style.backgroundColor = "transparent";
                             }
                         }}
                     >
