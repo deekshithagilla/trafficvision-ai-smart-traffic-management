@@ -25,7 +25,33 @@ from app.config import (
 
 
 def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
-    """Dispatches email via Resend HTTP API (if configured) or falls back to SMTP."""
+    """Dispatches email via Brevo HTTP API (primary), Resend HTTP API, or falls back to SMTP."""
+    brevo_key = os.getenv("BREVO_API_KEY", "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")
+    if brevo_key:
+        print(f"Attempting to send email via Brevo API to {to_email}...")
+        url = "https://api.brevo.com/v3/smtp/email"
+        headers = {
+            "accept": "application/json",
+            "api-key": brevo_key,
+            "content-type": "application/json"
+        }
+        sender_email = MAIL_FROM or "deekshithagilla@gmail.com"
+        payload = {
+            "sender": {"name": "TrafficVision AI", "email": sender_email},
+            "to": [{"email": to_email}],
+            "subject": subject,
+            "textContent": body
+        }
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=5)
+            if response.status_code in (200, 201):
+                print(f"Email sent successfully to {to_email} via Brevo API.")
+                return
+            else:
+                print(f"Brevo API error: {response.status_code} - {response.text}.")
+        except Exception as e:
+            print(f"Brevo HTTP API failed: {e}.")
+
     resend_key = os.getenv("RESEND_API_KEY")
     if resend_key:
         print(f"Attempting to send email via Resend API to {to_email}...")
