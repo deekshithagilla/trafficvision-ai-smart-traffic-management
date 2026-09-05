@@ -25,9 +25,9 @@ export default function Landing() {
                 .nav-link-custom {
                     color: #334155;
                     text-decoration: none;
-                    font-size: 15px;
+                    font-size: 16.5px;
                     font-weight: 600;
-                    padding: 8px 12px;
+                    padding: 8px 14px;
                     transition: all 0.2s ease;
                 }
                 .nav-link-custom:hover {
@@ -38,8 +38,8 @@ export default function Landing() {
                     color: #ffffff;
                     border: none;
                     border-radius: 50px;
-                    padding: 12px 26px;
-                    font-size: 14.5px;
+                    padding: 13px 30px;
+                    font-size: 16px;
                     font-weight: 700;
                     cursor: pointer;
                     display: inline-flex;
@@ -59,9 +59,9 @@ export default function Landing() {
                     color: #0f172a;
                     border: 1.5px solid #cbd5e1;
                     border-radius: 50px;
-                    padding: 10px 24px;
-                    font-size: 14.5px;
-                    font-weight: 600;
+                    padding: 12px 28px;
+                    font-size: 16px;
+                    font-weight: 700;
                     cursor: pointer;
                     text-decoration: none;
                     transition: all 0.2s ease;
@@ -76,7 +76,7 @@ export default function Landing() {
                     flex-direction: column;
                     align-items: center;
                     text-align: center;
-                    gap: 10px;
+                    gap: 12px;
                     cursor: pointer;
                     transition: transform 0.25s ease;
                 }
@@ -113,7 +113,7 @@ export default function Landing() {
             <header style={{
                 maxWidth: "1400px",
                 margin: "0 auto",
-                padding: "24px 36px",
+                padding: "26px 36px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -125,12 +125,12 @@ export default function Landing() {
                     <img
                         src="/trafficvision-logo.png"
                         alt="TrafficVision AI - Smarter Roads. Safer Tomorrows."
-                        style={{ height: "46px", objectFit: "contain" }}
+                        style={{ height: "52px", objectFit: "contain" }}
                     />
                 </Link>
 
                 {/* Nav Links */}
-                <nav className="nav-center-links" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
+                <nav className="nav-center-links" style={{ display: "flex", alignItems: "center", gap: "32px" }}>
                     <a
                         href="#home"
                         className="nav-link-custom"
@@ -150,7 +150,7 @@ export default function Landing() {
                 </nav>
 
                 {/* Right Action Items: Search Icon + Login + Get Started */}
-                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
                     {/* Search Icon */}
                     <button
                         onClick={() => navigate("/prediction")}
@@ -166,7 +166,7 @@ export default function Landing() {
                         }}
                         title="Search Routes"
                     >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
@@ -213,12 +213,12 @@ export default function Landing() {
                             background: "#ecfdf5",
                             border: "1px solid #d1fae5",
                             color: "#047857",
-                            padding: "6px 16px",
+                            padding: "7px 18px",
                             borderRadius: "50px",
-                            fontSize: "12px",
+                            fontSize: "13.5px",
                             fontWeight: "800",
                             letterSpacing: "0.05em",
-                            marginBottom: "18px"
+                            marginBottom: "20px"
                         }}>
                             <span style={{
                                 width: "8px",
@@ -233,12 +233,12 @@ export default function Landing() {
 
                         {/* Grand Two-Tone Headline */}
                         <h1 style={{
-                            fontSize: "clamp(38px, 4.4vw, 54px)",
+                            fontSize: "clamp(44px, 5.2vw, 60px)",
                             fontWeight: "800",
                             color: "#0f172a",
-                            lineHeight: "1.14",
+                            lineHeight: "1.12",
                             letterSpacing: "-0.03em",
-                            margin: "0 0 18px 0"
+                            margin: "0 0 20px 0"
                         }}>
                             Smarter Traffic <br />
                             <span style={{ color: "#059669" }}>
@@ -248,11 +248,11 @@ export default function Landing() {
 
                         {/* Subtitle Description */}
                         <p style={{
-                            fontSize: "15.5px",
-                            lineHeight: "1.7",
+                            fontSize: "17.5px",
+                            lineHeight: "1.75",
                             color: "#475569",
-                            margin: "0 0 26px 0",
-                            maxWidth: "480px"
+                            margin: "0 0 30px 0",
+                            maxWidth: "510px"
                         }}>
                             TrafficVision AI uses real-time data and advanced machine learning to predict congestion, detect risks, and suggest smarter routes — helping cities move faster, cleaner, and more safely.
                         </p>
@@ -262,9 +262,9 @@ export default function Landing() {
                             onClick={() => navigate("/prediction")}
                             className="btn-green-pill"
                             style={{
-                                padding: "14px 34px",
-                                fontSize: "16px",
-                                marginBottom: "40px"
+                                padding: "16px 36px",
+                                fontSize: "17px",
+                                marginBottom: "44px"
                             }}
                         >
                             <span>Explore Features</span>
@@ -276,13 +276,13 @@ export default function Landing() {
                             display: "flex",
                             gap: "24px",
                             flexWrap: "wrap",
-                            marginBottom: "44px"
+                            marginBottom: "46px"
                         }}>
                             {/* Circle 1: Real-time Insights */}
                             <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
                                 <div style={{
-                                    width: "56px",
-                                    height: "56px",
+                                    width: "62px",
+                                    height: "62px",
                                     borderRadius: "50%",
                                     background: "#e6fffa",
                                     border: "1px solid #b2f5ea",
@@ -292,13 +292,13 @@ export default function Landing() {
                                     color: "#0d9488",
                                     boxShadow: "0 4px 12px rgba(13, 148, 136, 0.12)"
                                 }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                         <line x1="18" y1="20" x2="18" y2="10" />
                                         <line x1="12" y1="20" x2="12" y2="4" />
                                         <line x1="6" y1="20" x2="6" y2="14" />
                                     </svg>
                                 </div>
-                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "80px", lineHeight: "1.3" }}>
+                                <span style={{ fontSize: "13.5px", fontWeight: "700", color: "#1e293b", maxWidth: "95px", lineHeight: "1.3" }}>
                                     Real-time Insights
                                 </span>
                             </div>
@@ -306,8 +306,8 @@ export default function Landing() {
                             {/* Circle 2: Traffic Predictions */}
                             <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
                                 <div style={{
-                                    width: "56px",
-                                    height: "56px",
+                                    width: "62px",
+                                    height: "62px",
                                     borderRadius: "50%",
                                     background: "#eff6ff",
                                     border: "1px solid #bfdbfe",
@@ -317,14 +317,14 @@ export default function Landing() {
                                     color: "#2563eb",
                                     boxShadow: "0 4px 12px rgba(37, 99, 235, 0.12)"
                                 }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                                         <path d="M5 17h14v-5H5z" />
                                         <circle cx="7.5" cy="17.5" r="2.5" />
                                         <circle cx="16.5" cy="17.5" r="2.5" />
                                         <path d="M5 12l2-6h10l2 6" />
                                     </svg>
                                 </div>
-                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "85px", lineHeight: "1.3" }}>
+                                <span style={{ fontSize: "13.5px", fontWeight: "700", color: "#1e293b", maxWidth: "95px", lineHeight: "1.3" }}>
                                     Traffic Predictions
                                 </span>
                             </div>
@@ -332,8 +332,8 @@ export default function Landing() {
                             {/* Circle 3: Accident Risk Alerts */}
                             <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
                                 <div style={{
-                                    width: "56px",
-                                    height: "56px",
+                                    width: "62px",
+                                    height: "62px",
                                     borderRadius: "50%",
                                     background: "#fef3c7",
                                     border: "1px solid #fde68a",
@@ -343,11 +343,11 @@ export default function Landing() {
                                     color: "#d97706",
                                     boxShadow: "0 4px 12px rgba(217, 119, 6, 0.12)"
                                 }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                     </svg>
                                 </div>
-                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "85px", lineHeight: "1.3" }}>
+                                <span style={{ fontSize: "13.5px", fontWeight: "700", color: "#1e293b", maxWidth: "95px", lineHeight: "1.3" }}>
                                     Accident Risk Alerts
                                 </span>
                             </div>
@@ -355,8 +355,8 @@ export default function Landing() {
                             {/* Circle 4: Smart Route Recommendations */}
                             <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
                                 <div style={{
-                                    width: "56px",
-                                    height: "56px",
+                                    width: "62px",
+                                    height: "62px",
                                     borderRadius: "50%",
                                     background: "#f0fdf4",
                                     border: "1px solid #bbf7d0",
@@ -366,12 +366,12 @@ export default function Landing() {
                                     color: "#16a34a",
                                     boxShadow: "0 4px 12px rgba(22, 163, 74, 0.12)"
                                 }}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                                         <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
                                         <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                                     </svg>
                                 </div>
-                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "110px", lineHeight: "1.3" }}>
+                                <span style={{ fontSize: "13.5px", fontWeight: "700", color: "#1e293b", maxWidth: "115px", lineHeight: "1.3" }}>
                                     Smart Route Recommendations
                                 </span>
                             </div>
@@ -388,18 +388,18 @@ export default function Landing() {
                             marginBottom: "28px"
                         }}>
                             <div>
-                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#059669" }}>30%</div>
-                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Reduced Congestion</div>
+                                <div style={{ fontSize: "38px", fontWeight: "800", color: "#059669" }}>30%</div>
+                                <div style={{ fontSize: "14.5px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Reduced Congestion</div>
                             </div>
-                            <div style={{ width: "1px", height: "38px", background: "#cbd5e1" }} />
+                            <div style={{ width: "1px", height: "42px", background: "#cbd5e1" }} />
                             <div>
-                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#0284c7" }}>15+</div>
-                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Key City Routes</div>
+                                <div style={{ fontSize: "38px", fontWeight: "800", color: "#0284c7" }}>15+</div>
+                                <div style={{ fontSize: "14.5px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Key City Routes</div>
                             </div>
-                            <div style={{ width: "1px", height: "38px", background: "#cbd5e1" }} />
+                            <div style={{ width: "1px", height: "42px", background: "#cbd5e1" }} />
                             <div>
-                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#0f172a" }}>100%</div>
-                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Towards Safer Cities</div>
+                                <div style={{ fontSize: "38px", fontWeight: "800", color: "#0f172a" }}>100%</div>
+                                <div style={{ fontSize: "14.5px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Towards Safer Cities</div>
                             </div>
                         </div>
 
@@ -407,12 +407,12 @@ export default function Landing() {
                         <div style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: "8px",
-                            fontSize: "13px",
+                            gap: "10px",
+                            fontSize: "14.5px",
                             fontWeight: "600",
                             color: "#64748b"
                         }}>
-                            <span style={{ fontSize: "15px" }}>🌿</span>
+                            <span style={{ fontSize: "17px" }}>🌿</span>
                             <span>Cleaner Cities</span>
                             <span>|</span>
                             <span>Smarter Commutes</span>
@@ -449,24 +449,24 @@ export default function Landing() {
             {/* ================= FEATURES SECTION ================= */}
             <section id="features" style={{
                 background: "#ffffff",
-                padding: "90px 36px",
+                padding: "100px 36px",
                 borderTop: "1px solid #e2e8f0"
             }}>
                 <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
-                    <div style={{ textAlign: "center", maxWidth: "660px", margin: "0 auto 50px" }}>
+                    <div style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto 56px" }}>
                         <span style={{
                             color: "#059669",
-                            fontSize: "13px",
+                            fontSize: "14px",
                             fontWeight: "800",
                             letterSpacing: "0.06em",
                             textTransform: "uppercase"
                         }}>
                             INTELLIGENT URBAN MOBILITY
                         </span>
-                        <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#0f172a", margin: "14px 0 10px 0" }}>
+                        <h2 style={{ fontSize: "40px", fontWeight: "800", color: "#0f172a", margin: "14px 0 12px 0" }}>
                             Core Capabilities of TrafficVision AI
                         </h2>
-                        <p style={{ fontSize: "16px", color: "#64748b", lineHeight: "1.6" }}>
+                        <p style={{ fontSize: "17.5px", color: "#64748b", lineHeight: "1.65" }}>
                             Explore how machine learning and real-time mapping work together to optimize transit networks.
                         </p>
                     </div>
@@ -474,124 +474,124 @@ export default function Landing() {
                     <div style={{
                         display: "grid",
                         gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                        gap: "26px"
+                        gap: "28px"
                     }}>
                         {/* Feature 1 */}
                         <div style={{
-                            padding: "30px",
+                            padding: "32px",
                             borderRadius: "20px",
                             background: "#f8fafc",
                             border: "1px solid #e2e8f0",
                             transition: "all 0.25s"
                         }}>
                             <div style={{
-                                width: "48px",
-                                height: "48px",
+                                width: "52px",
+                                height: "52px",
                                 borderRadius: "14px",
                                 background: "#ecfdf5",
                                 color: "#059669",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: "22px",
-                                marginBottom: "18px"
+                                fontSize: "24px",
+                                marginBottom: "20px"
                             }}>
                                 📊
                             </div>
-                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                            <h3 style={{ fontSize: "21px", fontWeight: "700", color: "#0f172a", marginBottom: "10px" }}>
                                 Predictive Volume Modeling
                             </h3>
-                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                            <p style={{ fontSize: "15.5px", color: "#64748b", lineHeight: "1.65" }}>
                                 Trained on historical traffic records and weather parameters (rain, clouds, snow) using an optimized XGBoost engine.
                             </p>
                         </div>
 
                         {/* Feature 2 */}
                         <div style={{
-                            padding: "30px",
+                            padding: "32px",
                             borderRadius: "20px",
                             background: "#f8fafc",
                             border: "1px solid #e2e8f0",
                             transition: "all 0.25s"
                         }}>
                             <div style={{
-                                width: "48px",
-                                height: "48px",
+                                width: "52px",
+                                height: "52px",
                                 borderRadius: "14px",
                                 background: "#eff6ff",
                                 color: "#2563eb",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: "22px",
-                                marginBottom: "18px"
+                                fontSize: "24px",
+                                marginBottom: "20px"
                             }}>
                                 🗺️
                             </div>
-                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                            <h3 style={{ fontSize: "21px", fontWeight: "700", color: "#0f172a", marginBottom: "10px" }}>
                                 Multi-Corridor Leaflet Maps
                             </h3>
-                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                            <p style={{ fontSize: "15.5px", color: "#64748b", lineHeight: "1.65" }}>
                                 Live interactive routing comparing distances, transit durations, and speed variations across urban corridors.
                             </p>
                         </div>
 
                         {/* Feature 3 */}
                         <div style={{
-                            padding: "30px",
+                            padding: "32px",
                             borderRadius: "20px",
                             background: "#f8fafc",
                             border: "1px solid #e2e8f0",
                             transition: "all 0.25s"
                         }}>
                             <div style={{
-                                width: "48px",
-                                height: "48px",
+                                width: "52px",
+                                height: "52px",
                                 borderRadius: "14px",
                                 background: "#fef3c7",
                                 color: "#d97706",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: "22px",
-                                marginBottom: "18px"
+                                fontSize: "24px",
+                                marginBottom: "20px"
                             }}>
                                 🚨
                             </div>
-                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                            <h3 style={{ fontSize: "21px", fontWeight: "700", color: "#0f172a", marginBottom: "10px" }}>
                                 Accident Risk Advisories
                             </h3>
-                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                            <p style={{ fontSize: "15.5px", color: "#64748b", lineHeight: "1.65" }}>
                                 Automated warning triggers and email dispatches during severe weather conditions to safeguard commuters.
                             </p>
                         </div>
 
                         {/* Feature 4 */}
                         <div style={{
-                            padding: "30px",
+                            padding: "32px",
                             borderRadius: "20px",
                             background: "#f8fafc",
                             border: "1px solid #e2e8f0",
                             transition: "all 0.25s"
                         }}>
                             <div style={{
-                                width: "48px",
-                                height: "48px",
+                                width: "52px",
+                                height: "52px",
                                 borderRadius: "14px",
                                 background: "#f0fdf4",
                                 color: "#16a34a",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                fontSize: "22px",
-                                marginBottom: "18px"
+                                fontSize: "24px",
+                                marginBottom: "20px"
                             }}>
                                 📄
                             </div>
-                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                            <h3 style={{ fontSize: "21px", fontWeight: "700", color: "#0f172a", marginBottom: "10px" }}>
                                 Downloadable PDF Reports
                             </h3>
-                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                            <p style={{ fontSize: "15.5px", color: "#64748b", lineHeight: "1.65" }}>
                                 Instant 2-page executive traffic intelligence summaries with neat autoTable formatting and eco-driving guidance.
                             </p>
                         </div>
@@ -600,14 +600,14 @@ export default function Landing() {
             </section>
 
             {/* ================= FAQ SECTION ================= */}
-            <section id="faq" style={{ padding: "80px 36px", background: "#f9fdfe" }}>
-                <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-                    <div style={{ textAlign: "center", marginBottom: "40px" }}>
-                        <span style={{ color: "#059669", fontSize: "13px", fontWeight: "800", letterSpacing: "0.06em", textTransform: "uppercase" }}>FAQ</span>
-                        <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginTop: "8px" }}>Frequently Asked Questions</h2>
+            <section id="faq" style={{ padding: "90px 36px", background: "#f9fdfe" }}>
+                <div style={{ maxWidth: "840px", margin: "0 auto" }}>
+                    <div style={{ textAlign: "center", marginBottom: "44px" }}>
+                        <span style={{ color: "#059669", fontSize: "14px", fontWeight: "800", letterSpacing: "0.06em", textTransform: "uppercase" }}>FAQ</span>
+                        <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#0f172a", marginTop: "10px" }}>Frequently Asked Questions</h2>
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                         {[
                             {
                                 q: "How does TrafficVision AI predict congestion levels?",
@@ -626,19 +626,19 @@ export default function Landing() {
                                 key={idx}
                                 style={{
                                     background: "#ffffff",
-                                    borderRadius: "16px",
+                                    borderRadius: "18px",
                                     border: "1px solid #e2e8f0",
-                                    padding: "20px 24px",
+                                    padding: "22px 28px",
                                     cursor: "pointer"
                                 }}
                                 onClick={() => toggleFaq(idx)}
                             >
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "700", color: "#0f172a", fontSize: "16px" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "700", color: "#0f172a", fontSize: "17.5px" }}>
                                     <span>{item.q}</span>
-                                    <span style={{ color: "#059669", fontSize: "20px" }}>{faqOpen === idx ? "−" : "+"}</span>
+                                    <span style={{ color: "#059669", fontSize: "22px" }}>{faqOpen === idx ? "−" : "+"}</span>
                                 </div>
                                 {faqOpen === idx && (
-                                    <p style={{ marginTop: "12px", color: "#475569", fontSize: "14.5px", lineHeight: "1.6" }}>
+                                    <p style={{ marginTop: "14px", color: "#475569", fontSize: "15.5px", lineHeight: "1.65" }}>
                                         {item.a}
                                     </p>
                                 )}
@@ -652,8 +652,8 @@ export default function Landing() {
             <footer style={{
                 background: "#0f172a",
                 color: "#94a3b8",
-                padding: "36px",
-                fontSize: "14px"
+                padding: "40px 36px",
+                fontSize: "15px"
             }}>
                 <div style={{
                     maxWidth: "1400px",
@@ -662,11 +662,11 @@ export default function Landing() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     flexWrap: "wrap",
-                    gap: "16px"
+                    gap: "18px"
                 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        <span style={{ fontSize: "18px" }}>🌿</span>
-                        <span style={{ fontWeight: "700", color: "#ffffff" }}>TrafficVision AI</span>
+                        <span style={{ fontSize: "20px" }}>🌿</span>
+                        <span style={{ fontWeight: "700", color: "#ffffff", fontSize: "16px" }}>TrafficVision AI</span>
                         <span>— Smarter Roads. Safer Tomorrows.</span>
                     </div>
 
