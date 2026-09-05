@@ -57,23 +57,26 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
             print(f"Resend HTTP API failed: {e}. Falling back to SMTP...")
 
     # Fallback SMTP delivery
-    print(f"Attempting to send email via SMTP to {to_email}...")
-    message = MIMEText(body, "plain")
-    message["Subject"] = subject
-    message["From"] = MAIL_FROM
-    message["To"] = to_email
+    try:
+        print(f"Attempting to send email via SMTP to {to_email}...")
+        message = MIMEText(body, "plain")
+        message["Subject"] = subject
+        message["From"] = MAIL_FROM
+        message["To"] = to_email
 
-    if MAIL_SSL_TLS:
-        with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
-    else:
-        with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
-            if MAIL_STARTTLS:
-                server.starttls()
-            server.login(MAIL_USERNAME, MAIL_PASSWORD)
-            server.sendmail(MAIL_FROM, [to_email], message.as_string())
-    print("Email sent successfully via SMTP.")
+        if MAIL_SSL_TLS:
+            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
+                server.login(MAIL_USERNAME, MAIL_PASSWORD)
+                server.sendmail(MAIL_FROM, [to_email], message.as_string())
+        else:
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT, timeout=5) as server:
+                if MAIL_STARTTLS:
+                    server.starttls()
+                server.login(MAIL_USERNAME, MAIL_PASSWORD)
+                server.sendmail(MAIL_FROM, [to_email], message.as_string())
+        print("Email sent successfully via SMTP.")
+    except Exception as err:
+        print(f"SMTP delivery failed: {err}")
 
 
 def generate_reset_token() -> str:
