@@ -101,7 +101,7 @@ function Login() {
             {/* TOP BAR */}
             <header className="hero-login-topbar">
                 <Link to="/" className="hero-brand-logo-link">
-                    <span style={{ fontSize: "24px" }}>🚦</span>
+                    <span style={{ fontSize: "36px" }}>🚦</span>
                     <span>
                         TrafficVision <span className="brand-ai">AI</span>
                     </span>
@@ -125,7 +125,7 @@ function Login() {
                             <line x1="12" y1="20" x2="12" y2="4"></line>
                             <line x1="6" y1="20" x2="6" y2="14"></line>
                         </svg>
-                        <span>AI Powered Traffic Prediction</span>
+                        <span>AI-Powered Traffic Prediction & Urban Intelligence</span>
                     </div>
 
                     {/* Grand Title */}
@@ -136,51 +136,70 @@ function Login() {
 
                     {/* Description */}
                     <p className="hero-description">
-                        TrafficVision AI uses data and machine learning to predict traffic, reduce congestion and make our cities more livable.
+                        TrafficVision AI harnesses advanced predictive machine learning, real-time meteorological signals, and urban traffic monitoring to forecast delays, eliminate bottlenecks, and ensure safer journeys for modern cities.
                     </p>
 
-                    {/* 3 Feature Badges matching mockup */}
-                    <div className="hero-features-row">
+                    {/* 4 Feature Cards (2x2 Grid) */}
+                    <div className="hero-features-grid">
 
-                        {/* Real-time Insights */}
-                        <div className="hero-feature-item">
-                            <div className="hero-feature-icon-wrap" style={{ background: "#eff6ff", color: "#2563eb" }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <line x1="18" y1="20" x2="18" y2="10" />
-                                    <line x1="12" y1="20" x2="12" y2="4" />
-                                    <line x1="6" y1="20" x2="6" y2="14" />
-                                </svg>
+                        <div className="hero-feature-card">
+                            <div className="hero-card-icon" style={{ background: "#eff6ff", color: "#2563eb" }}>
+                                📊
                             </div>
-                            <span className="hero-feature-label">
-                                Real-time Insights
-                            </span>
+                            <div>
+                                <h4>Real-Time Insights</h4>
+                                <p>Live volume & peak congestion tracking across urban routes</p>
+                            </div>
                         </div>
 
-                        {/* Safer Roads */}
-                        <div className="hero-feature-item">
-                            <div className="hero-feature-icon-wrap" style={{ background: "#e0f2fe", color: "#0284c7" }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
+                        <div className="hero-feature-card">
+                            <div className="hero-card-icon" style={{ background: "#e0f2fe", color: "#0284c7" }}>
+                                🛡️
                             </div>
-                            <span className="hero-feature-label">
-                                Safer Roads
-                            </span>
+                            <div>
+                                <h4>Safer Roads</h4>
+                                <p>Automated hazard warning triggers & severe weather advisories</p>
+                            </div>
                         </div>
 
-                        {/* Greener Tomorrow */}
-                        <div className="hero-feature-item">
-                            <div className="hero-feature-icon-wrap" style={{ background: "#dcfce7", color: "#16a34a" }}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-                                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-                                </svg>
+                        <div className="hero-feature-card">
+                            <div className="hero-card-icon" style={{ background: "#fef3c7", color: "#d97706" }}>
+                                ⚡
                             </div>
-                            <span className="hero-feature-label">
-                                Greener Tomorrow
-                            </span>
+                            <div>
+                                <h4>Smart Predictions</h4>
+                                <p>XGBoost ML modeling for precision delay & duration forecasts</p>
+                            </div>
                         </div>
 
+                        <div className="hero-feature-card">
+                            <div className="hero-card-icon" style={{ background: "#dcfce7", color: "#16a34a" }}>
+                                🍃
+                            </div>
+                            <div>
+                                <h4>Greener Tomorrow</h4>
+                                <p>Eco-optimized routes reducing fuel consumption & emissions</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* Stats Impact Bar */}
+                    <div className="hero-stats-row">
+                        <div className="stat-col">
+                            <div className="stat-num">30%</div>
+                            <div className="stat-lbl">Reduced Delay</div>
+                        </div>
+                        <div className="stat-divider" />
+                        <div className="stat-col">
+                            <div className="stat-num">15+</div>
+                            <div className="stat-lbl">City Corridors</div>
+                        </div>
+                        <div className="stat-divider" />
+                        <div className="stat-col">
+                            <div className="stat-num">100%</div>
+                            <div className="stat-lbl">Safety Driven</div>
+                        </div>
                     </div>
 
                 </div>
@@ -317,9 +336,6 @@ function Login() {
 
             {/* BOTTOM FOOTER BAR */}
             <footer className="hero-login-footer">
-                <div>
-                    © {new Date().getFullYear()} TrafficVision AI. All rights reserved.
-                </div>
                 <div>
                     Built for Safer, Smarter and Sustainable Cities 🍃
                 </div>
