@@ -133,7 +133,9 @@ function AdminDashboard() {
         } catch (error) {
             console.log(error);
             toast.error(
-                error.response?.data?.detail || "Failed to suspend user."
+                error.response?.data?.message ||
+                error.response?.data?.detail ||
+                "Failed to suspend user."
             );
         } finally {
             setBusyId(null);
@@ -149,7 +151,9 @@ function AdminDashboard() {
         } catch (error) {
             console.log(error);
             toast.error(
-                error.response?.data?.detail || "Failed to restore user."
+                error.response?.data?.message ||
+                error.response?.data?.detail ||
+                "Failed to restore user."
             );
         } finally {
             setBusyId(null);
@@ -170,7 +174,9 @@ function AdminDashboard() {
         } catch (error) {
             console.log(error);
             toast.error(
-                error.response?.data?.detail || "Failed to promote user."
+                error.response?.data?.message ||
+                error.response?.data?.detail ||
+                "Failed to promote user."
             );
         } finally {
             setBusyId(null);
@@ -191,7 +197,9 @@ function AdminDashboard() {
         } catch (error) {
             console.log(error);
             toast.error(
-                error.response?.data?.detail || "Failed to demote user."
+                error.response?.data?.message ||
+                error.response?.data?.detail ||
+                "Failed to demote user."
             );
         } finally {
             setBusyId(null);
@@ -212,7 +220,9 @@ function AdminDashboard() {
         } catch (error) {
             console.log(error);
             toast.error(
-                error.response?.data?.detail || "Failed to send invitation."
+                error.response?.data?.message ||
+                error.response?.data?.detail ||
+                "Failed to send invitation."
             );
         } finally {
             setInviting(false);
