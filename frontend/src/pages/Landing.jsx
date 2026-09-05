@@ -3,433 +3,678 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Landing() {
     const navigate = useNavigate();
-    const [source, setSource] = useState("");
-    const [destination, setDestination] = useState("");
-    const [activeDot, setActiveDot] = useState(0);
+    const [faqOpen, setFaqOpen] = useState(null);
 
-    const handlePredictSubmit = (e) => {
-        e.preventDefault();
-        navigate("/prediction");
+    const toggleFaq = (index) => {
+        setFaqOpen(faqOpen === index ? null : index);
     };
 
     return (
         <div style={{
-            background: "linear-gradient(135deg, #0b111e 0%, #10192a 50%, #0d1424 100%)",
-            color: "#ffffff",
+            background: "#f9fdfe",
+            color: "#0f172a",
+            fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
             minHeight: "100vh",
-            fontFamily: "'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            overflowX: "hidden",
-            position: "relative"
+            overflowX: "hidden"
         }}>
             <style>{`
-                ::placeholder {
-                    color: #94a3b8;
-                    opacity: 1;
-                    font-size: 13.5px;
+                @keyframes pulseDot {
+                    0%, 100% { opacity: 0.6; transform: scale(1); }
+                    50% { opacity: 1; transform: scale(1.2); }
                 }
-                .pill-input {
-                    width: 100%;
-                    max-width: 320px;
-                    padding: 13px 22px;
-                    border-radius: 50px;
-                    border: none;
-                    outline: none;
-                    background: #ffffff;
-                    color: #0f172a;
-                    font-size: 14px;
-                    font-family: inherit;
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+                .nav-link-custom {
+                    color: #334155;
+                    text-decoration: none;
+                    font-size: 15px;
+                    font-weight: 600;
+                    padding: 8px 12px;
                     transition: all 0.2s ease;
-                    box-sizing: border-box;
                 }
-                .pill-input:focus {
-                    box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.4), 0 4px 20px rgba(0, 0, 0, 0.2);
+                .nav-link-custom:hover {
+                    color: #059669;
                 }
-                .btn-send {
+                .btn-green-pill {
+                    background: #059669;
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 50px;
+                    padding: 12px 26px;
+                    font-size: 14.5px;
+                    font-weight: 700;
+                    cursor: pointer;
                     display: inline-flex;
                     align-items: center;
-                    justify-content: center;
-                    gap: 6px;
-                    background: linear-gradient(90deg, #0070f3 0%, #0099ff 100%);
-                    color: #ffffff;
-                    border: none;
-                    padding: 10px 24px;
-                    border-radius: 50px;
-                    font-weight: 700;
-                    font-size: 13.5px;
-                    letter-spacing: 0.02em;
-                    cursor: pointer;
-                    box-shadow: 0 4px 18px rgba(0, 112, 243, 0.45);
+                    gap: 8px;
+                    box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
                     transition: all 0.25s ease;
-                }
-                .btn-send:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 24px rgba(0, 112, 243, 0.6);
-                    background: linear-gradient(90deg, #0060d0 0%, #0088ee 100%);
-                }
-                .nav-item {
-                    color: #cbd5e1;
                     text-decoration: none;
-                    font-size: 13px;
-                    font-weight: 700;
-                    letter-spacing: 0.08em;
-                    text-transform: uppercase;
-                    transition: color 0.2s ease;
-                    padding: 6px 4px;
                 }
-                .nav-item:hover {
-                    color: #ffffff;
+                .btn-green-pill:hover {
+                    background: #047857;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.45);
                 }
-                @media (max-width: 980px) {
-                    .hero-container {
+                .btn-login-pill {
+                    background: #ffffff;
+                    color: #0f172a;
+                    border: 1.5px solid #cbd5e1;
+                    border-radius: 50px;
+                    padding: 10px 24px;
+                    font-size: 14.5px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                }
+                .btn-login-pill:hover {
+                    border-color: #059669;
+                    color: #059669;
+                    background: #f0fdf4;
+                }
+                .feature-circle-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    gap: 10px;
+                    cursor: pointer;
+                    transition: transform 0.25s ease;
+                }
+                .feature-circle-item:hover {
+                    transform: translateY(-4px);
+                }
+                @media (max-width: 1024px) {
+                    .hero-split-grid {
                         grid-template-columns: 1fr !important;
-                        gap: 50px !important;
-                        padding-top: 110px !important;
+                        gap: 40px !important;
                         text-align: center;
                     }
-                    .hero-left {
+                    .hero-left-content {
                         align-items: center !important;
-                        max-width: 100% !important;
+                        margin: 0 auto;
                     }
-                    .hero-left p {
+                    .hero-left-content p {
                         margin-left: auto;
                         margin-right: auto;
                     }
-                    .form-container {
-                        align-items: center !important;
-                        width: 100%;
+                    .stats-flex-row {
+                        justify-content: center !important;
                     }
-                    .nav-links-wrap {
+                    .nav-center-links {
                         display: none !important;
                     }
-                    .visual-wrapper {
-                        max-width: 420px;
-                        margin: 0 auto;
+                    .features-circle-row {
+                        justify-content: center !important;
                     }
                 }
             `}</style>
 
             {/* ================= NAVBAR ================= */}
             <header style={{
-                padding: "26px 48px",
+                maxWidth: "1400px",
+                margin: "0 auto",
+                padding: "24px 36px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 position: "relative",
                 zIndex: 20
             }}>
-                {/* Brand Logo */}
-                <Link to="/" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    textDecoration: "none"
-                }}>
-                    {/* Modern geometric logo mark matching reference */}
-                    <div style={{
-                        width: "36px",
-                        height: "36px",
-                        position: "relative",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                    }}>
-                        <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
-                            <rect x="2" y="2" width="14" height="14" rx="4" fill="#0084ff" />
-                            <rect x="20" y="2" width="14" height="14" rx="4" fill="#ff4d4f" />
-                            <rect x="2" y="20" width="14" height="14" rx="4" fill="#52c41a" />
-                            <rect x="20" y="20" width="14" height="14" rx="4" fill="#faad14" />
-                        </svg>
-                    </div>
-                    <span style={{
-                        fontSize: "20px",
-                        fontWeight: "800",
-                        letterSpacing: "0.04em",
-                        color: "#ffffff",
-                        textTransform: "uppercase"
-                    }}>
-                        TrafficVision
-                    </span>
+                {/* Brand Logo matching reference */}
+                <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+                    <img
+                        src="/trafficvision-logo.png"
+                        alt="TrafficVision AI - Smarter Roads. Safer Tomorrows."
+                        style={{ height: "46px", objectFit: "contain" }}
+                    />
                 </Link>
 
                 {/* Nav Links */}
-                <nav className="nav-links-wrap" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "36px"
-                }}>
-                    <a href="#home" className="nav-item">Home</a>
-                    <a href="#services" className="nav-item">Services</a>
-                    <a href="#about" className="nav-item">About</a>
-                    <a href="#contact" className="nav-item">Contact</a>
-                    <a href="#faq" className="nav-item">FAQ</a>
-
-                    {/* Search / Action Icon */}
-                    <Link
-                        to="/login"
+                <nav className="nav-center-links" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
+                    <a
+                        href="#home"
+                        className="nav-link-custom"
                         style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            color: "#ffffff",
-                            textDecoration: "none",
-                            fontSize: "13px",
-                            fontWeight: "700",
-                            letterSpacing: "0.06em",
-                            textTransform: "uppercase",
-                            background: "rgba(255, 255, 255, 0.08)",
-                            padding: "8px 18px",
-                            borderRadius: "50px",
-                            border: "1px solid rgba(255, 255, 255, 0.15)",
-                            transition: "all 0.2s"
+                            color: "#059669",
+                            borderBottom: "3px solid #059669",
+                            paddingBottom: "4px",
+                            fontWeight: "700"
                         }}
                     >
-                        <span>Sign In</span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                    </Link>
+                        Home
+                    </a>
+                    <a href="#features" className="nav-link-custom">Features</a>
+                    <a href="#about" className="nav-link-custom">About</a>
+                    <a href="#contact" className="nav-link-custom">Contact</a>
+                    <a href="#faq" className="nav-link-custom">FAQ</a>
                 </nav>
+
+                {/* Right Action Items: Search Icon + Login + Get Started */}
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    {/* Search Icon */}
+                    <button
+                        onClick={() => navigate("/prediction")}
+                        style={{
+                            background: "none",
+                            border: "none",
+                            color: "#334155",
+                            cursor: "pointer",
+                            padding: "6px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}
+                        title="Search Routes"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </button>
+
+                    {/* Login Button */}
+                    <Link to="/login" className="btn-login-pill">
+                        Login
+                    </Link>
+
+                    {/* Get Started Button */}
+                    <button onClick={() => navigate("/prediction")} className="btn-green-pill">
+                        <span>Get Started</span>
+                        <span>→</span>
+                    </button>
+                </div>
             </header>
 
             {/* ================= HERO SECTION ================= */}
-            <main style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                padding: "0 48px",
-                position: "relative",
-                zIndex: 10
+            <main id="home" style={{
+                maxWidth: "1400px",
+                margin: "0 auto",
+                padding: "10px 36px 60px",
+                position: "relative"
             }}>
-                <div className="hero-container" style={{
-                    maxWidth: "1320px",
-                    width: "100%",
-                    margin: "0 auto",
+                <div className="hero-split-grid" style={{
                     display: "grid",
-                    gridTemplateColumns: "1.05fr 1fr",
-                    gap: "40px",
-                    alignItems: "center",
-                    padding: "40px 0 60px"
+                    gridTemplateColumns: "1fr 1.1fr",
+                    gap: "36px",
+                    alignItems: "center"
                 }}>
-                    {/* LEFT COLUMN: Typography + Pill Input Form */}
-                    <div className="hero-left" style={{
+                    {/* LEFT COLUMN: Clean Typography & Features */}
+                    <div className="hero-left-content" style={{
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "flex-start",
-                        maxWidth: "520px"
+                        maxWidth: "540px"
                     }}>
-                        <h1 style={{
-                            fontSize: "clamp(38px, 4.8vw, 54px)",
+                        {/* Eyebrow Badge */}
+                        <div style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            background: "#ecfdf5",
+                            border: "1px solid #d1fae5",
+                            color: "#047857",
+                            padding: "6px 16px",
+                            borderRadius: "50px",
+                            fontSize: "12px",
                             fontWeight: "800",
-                            lineHeight: "1.15",
-                            color: "#ffffff",
-                            letterSpacing: "-0.02em",
-                            margin: "0 0 16px 0"
+                            letterSpacing: "0.05em",
+                            marginBottom: "18px"
                         }}>
-                            Predict Traffic <br />
-                            <span style={{ color: "#0084ff" }}>
-                                with AI Precision
+                            <span style={{
+                                width: "8px",
+                                height: "8px",
+                                borderRadius: "50%",
+                                background: "#059669",
+                                display: "inline-block",
+                                animation: "pulseDot 2s ease-in-out infinite"
+                            }} />
+                            AI-POWERED TRAFFIC MANAGEMENT
+                        </div>
+
+                        {/* Grand Two-Tone Headline */}
+                        <h1 style={{
+                            fontSize: "clamp(38px, 4.4vw, 54px)",
+                            fontWeight: "800",
+                            color: "#0f172a",
+                            lineHeight: "1.14",
+                            letterSpacing: "-0.03em",
+                            margin: "0 0 18px 0"
+                        }}>
+                            Smarter Traffic <br />
+                            <span style={{ color: "#059669" }}>
+                                for Safer, Greener Cities
                             </span>
                         </h1>
 
+                        {/* Subtitle Description */}
                         <p style={{
-                            fontSize: "14.5px",
-                            lineHeight: "1.65",
-                            color: "#94a3b8",
-                            margin: "0 0 32px 0",
-                            maxWidth: "440px"
+                            fontSize: "15.5px",
+                            lineHeight: "1.7",
+                            color: "#475569",
+                            margin: "0 0 26px 0",
+                            maxWidth: "480px"
                         }}>
-                            Forecast real-time vehicle density, mitigate transit delays, and receive dynamic multi-corridor route advisories powered by machine learning.
+                            TrafficVision AI uses real-time data and advanced machine learning to predict congestion, detect risks, and suggest smarter routes — helping cities move faster, cleaner, and more safely.
                         </p>
 
-                        {/* Two Pill Inputs + Send Button matching reference */}
-                        <form onSubmit={handlePredictSubmit} className="form-container" style={{
+                        {/* Primary Action Button */}
+                        <button
+                            onClick={() => navigate("/prediction")}
+                            className="btn-green-pill"
+                            style={{
+                                padding: "14px 34px",
+                                fontSize: "16px",
+                                marginBottom: "40px"
+                            }}
+                        >
+                            <span>Explore Features</span>
+                            <span>→</span>
+                        </button>
+
+                        {/* 4 Feature Circles Row matching reference */}
+                        <div className="features-circle-row" style={{
                             display: "flex",
-                            flexDirection: "column",
-                            gap: "14px",
-                            width: "100%",
-                            marginBottom: "40px"
+                            gap: "24px",
+                            flexWrap: "wrap",
+                            marginBottom: "44px"
                         }}>
-                            <input
-                                type="text"
-                                className="pill-input"
-                                placeholder="Source (e.g. Gachibowli)"
-                                value={source}
-                                onChange={(e) => setSource(e.target.value)}
-                            />
-
-                            <input
-                                type="text"
-                                className="pill-input"
-                                placeholder="Destination (e.g. HITEC City)"
-                                value={destination}
-                                onChange={(e) => setDestination(e.target.value)}
-                            />
-
-                            <div>
-                                <button type="submit" className="btn-send">
-                                    <span>Predict</span>
-                                    <span style={{ fontSize: "11px" }}>►</span>
-                                </button>
+                            {/* Circle 1: Real-time Insights */}
+                            <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
+                                <div style={{
+                                    width: "56px",
+                                    height: "56px",
+                                    borderRadius: "50%",
+                                    background: "#e6fffa",
+                                    border: "1px solid #b2f5ea",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#0d9488",
+                                    boxShadow: "0 4px 12px rgba(13, 148, 136, 0.12)"
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <line x1="18" y1="20" x2="18" y2="10" />
+                                        <line x1="12" y1="20" x2="12" y2="4" />
+                                        <line x1="6" y1="20" x2="6" y2="14" />
+                                    </svg>
+                                </div>
+                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "80px", lineHeight: "1.3" }}>
+                                    Real-time Insights
+                                </span>
                             </div>
-                        </form>
 
-                        {/* Subtle Website URL on bottom left */}
-                        <div style={{
-                            fontSize: "12.5px",
-                            color: "rgba(148, 163, 184, 0.7)",
-                            letterSpacing: "0.04em",
-                            fontWeight: "500"
+                            {/* Circle 2: Traffic Predictions */}
+                            <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
+                                <div style={{
+                                    width: "56px",
+                                    height: "56px",
+                                    borderRadius: "50%",
+                                    background: "#eff6ff",
+                                    border: "1px solid #bfdbfe",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#2563eb",
+                                    boxShadow: "0 4px 12px rgba(37, 99, 235, 0.12)"
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                        <path d="M5 17h14v-5H5z" />
+                                        <circle cx="7.5" cy="17.5" r="2.5" />
+                                        <circle cx="16.5" cy="17.5" r="2.5" />
+                                        <path d="M5 12l2-6h10l2 6" />
+                                    </svg>
+                                </div>
+                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "85px", lineHeight: "1.3" }}>
+                                    Traffic Predictions
+                                </span>
+                            </div>
+
+                            {/* Circle 3: Accident Risk Alerts */}
+                            <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
+                                <div style={{
+                                    width: "56px",
+                                    height: "56px",
+                                    borderRadius: "50%",
+                                    background: "#fef3c7",
+                                    border: "1px solid #fde68a",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#d97706",
+                                    boxShadow: "0 4px 12px rgba(217, 119, 6, 0.12)"
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    </svg>
+                                </div>
+                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "85px", lineHeight: "1.3" }}>
+                                    Accident Risk Alerts
+                                </span>
+                            </div>
+
+                            {/* Circle 4: Smart Route Recommendations */}
+                            <div className="feature-circle-item" onClick={() => navigate("/prediction")}>
+                                <div style={{
+                                    width: "56px",
+                                    height: "56px",
+                                    borderRadius: "50%",
+                                    background: "#f0fdf4",
+                                    border: "1px solid #bbf7d0",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    color: "#16a34a",
+                                    boxShadow: "0 4px 12px rgba(22, 163, 74, 0.12)"
+                                }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                                    </svg>
+                                </div>
+                                <span style={{ fontSize: "12.5px", fontWeight: "700", color: "#1e293b", maxWidth: "110px", lineHeight: "1.3" }}>
+                                    Smart Route Recommendations
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Stats Row matching reference */}
+                        <div className="stats-flex-row" style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "36px",
+                            paddingTop: "24px",
+                            borderTop: "1px solid #e2e8f0",
+                            width: "100%",
+                            marginBottom: "28px"
                         }}>
-                            www.trafficvision-ai.com
+                            <div>
+                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#059669" }}>30%</div>
+                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Reduced Congestion</div>
+                            </div>
+                            <div style={{ width: "1px", height: "38px", background: "#cbd5e1" }} />
+                            <div>
+                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#0284c7" }}>15+</div>
+                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Key City Routes</div>
+                            </div>
+                            <div style={{ width: "1px", height: "38px", background: "#cbd5e1" }} />
+                            <div>
+                                <div style={{ fontSize: "34px", fontWeight: "800", color: "#0f172a" }}>100%</div>
+                                <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "600", marginTop: "2px" }}>Towards Safer Cities</div>
+                            </div>
+                        </div>
+
+                        {/* Bottom Tagline */}
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                            color: "#64748b"
+                        }}>
+                            <span style={{ fontSize: "15px" }}>🌿</span>
+                            <span>Cleaner Cities</span>
+                            <span>|</span>
+                            <span>Smarter Commutes</span>
+                            <span>|</span>
+                            <span>Brighter Tomorrows</span>
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Organic Fluid Wave Cutout + Photo Mask */}
-                    <div className="visual-wrapper" style={{
-                        position: "relative",
-                        width: "100%",
+                    {/* RIGHT COLUMN: The High-Res Smart Highway Visual & Wave */}
+                    <div style={{
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
+                        position: "relative"
                     }}>
-                        {/* Container SVG / Shape Composition */}
-                        <div style={{
-                            position: "relative",
-                            width: "100%",
-                            maxWidth: "580px",
-                            height: "500px"
-                        }}>
-                            {/* SVG Layer: Vibrant Fluid Blue Wave + White Tracing Contour */}
-                            <svg
-                                viewBox="0 0 600 520"
-                                style={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    overflow: "visible",
-                                    zIndex: 1
-                                }}
-                            >
-                                <defs>
-                                    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stopColor="#0070f3" />
-                                        <stop offset="100%" stopColor="#00a8ff" />
-                                    </linearGradient>
-
-                                    {/* Organic curved shape mask for the photo */}
-                                    <clipPath id="curvedMask">
-                                        <path d="M 170 30 
-                                                 C 320 5, 480 30, 520 160 
-                                                 C 550 260, 530 400, 430 460 
-                                                 C 330 510, 160 500, 100 400 
-                                                 C 50 310, 60 70, 170 30 Z" />
-                                    </clipPath>
-                                </defs>
-
-                                {/* Background Electric Blue Fluid Wave */}
-                                <path
-                                    d="M 50 420 
-                                       C 70 300, 190 310, 260 300 
-                                       C 340 290, 420 160, 460 120 
-                                       C 510 70, 580 90, 590 190 
-                                       C 600 320, 560 480, 460 500 
-                                       C 360 520, 140 540, 50 420 Z"
-                                    fill="url(#waveGrad)"
-                                />
-
-                                {/* White Outline Curve Tracing gracefully alongside */}
-                                <path
-                                    d="M 20 440 
-                                       C 70 280, 200 290, 280 270 
-                                       C 370 250, 430 140, 470 90 
-                                       C 520 40, 595 60, 605 180 
-                                       C 615 320, 575 500, 450 515 
-                                       C 340 530, 120 560, 20 440 Z"
-                                    fill="none"
-                                    stroke="#ffffff"
-                                    strokeWidth="2.5"
-                                    strokeLinecap="round"
-                                    opacity="0.9"
-                                />
-
-                                {/* Organic Masked Image */}
-                                <g clipPath="url(#curvedMask)">
-                                    <image
-                                        href="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1200&auto=format&fit=crop"
-                                        x="40"
-                                        y="0"
-                                        width="520"
-                                        height="520"
-                                        preserveAspectRatio="xMidYMid slice"
-                                    />
-                                    {/* Soft atmospheric gradient over photo */}
-                                    <rect
-                                        x="0"
-                                        y="0"
-                                        width="600"
-                                        height="520"
-                                        fill="linear-gradient(180deg, rgba(16, 25, 42, 0) 60%, rgba(16, 25, 42, 0.4) 100%)"
-                                    />
-                                </g>
-                            </svg>
-
-                            {/* Carousel Indicator Dots (Matching reference) */}
-                            <div style={{
-                                position: "absolute",
-                                bottom: "35px",
-                                left: "48%",
-                                transform: "translateX(-50%)",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                zIndex: 10
-                            }}>
-                                <span
-                                    onClick={() => setActiveDot(0)}
-                                    style={{
-                                        width: activeDot === 0 ? "24px" : "8px",
-                                        height: "8px",
-                                        borderRadius: "50px",
-                                        background: activeDot === 0 ? "#ffffff" : "rgba(255, 255, 255, 0.4)",
-                                        cursor: "pointer",
-                                        transition: "all 0.3s ease"
-                                    }}
-                                />
-                                <span
-                                    onClick={() => setActiveDot(1)}
-                                    style={{
-                                        width: activeDot === 1 ? "24px" : "8px",
-                                        height: "8px",
-                                        borderRadius: "50px",
-                                        background: activeDot === 1 ? "#ffffff" : "rgba(255, 255, 255, 0.4)",
-                                        cursor: "pointer",
-                                        transition: "all 0.3s ease"
-                                    }}
-                                />
-                                <span
-                                    onClick={() => setActiveDot(2)}
-                                    style={{
-                                        width: activeDot === 2 ? "24px" : "8px",
-                                        height: "8px",
-                                        borderRadius: "50px",
-                                        background: activeDot === 2 ? "#ffffff" : "rgba(255, 255, 255, 0.4)",
-                                        cursor: "pointer",
-                                        transition: "all 0.3s ease"
-                                    }}
-                                />
-                            </div>
-                        </div>
+                        <img
+                            src="/hero-illustration.png"
+                            alt="TrafficVision AI - Smarter Traffic for Safer Greener Cities"
+                            style={{
+                                width: "100%",
+                                maxWidth: "660px",
+                                height: "auto",
+                                objectFit: "contain",
+                                filter: "drop-shadow(0 15px 35px rgba(0,0,0,0.06))",
+                                transition: "transform 0.4s ease"
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.01)"}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                        />
                     </div>
                 </div>
             </main>
 
-            {/* Bottom Spacer */}
-            <div style={{ height: "20px" }} />
+            {/* ================= FEATURES SECTION ================= */}
+            <section id="features" style={{
+                background: "#ffffff",
+                padding: "90px 36px",
+                borderTop: "1px solid #e2e8f0"
+            }}>
+                <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
+                    <div style={{ textAlign: "center", maxWidth: "660px", margin: "0 auto 50px" }}>
+                        <span style={{
+                            color: "#059669",
+                            fontSize: "13px",
+                            fontWeight: "800",
+                            letterSpacing: "0.06em",
+                            textTransform: "uppercase"
+                        }}>
+                            INTELLIGENT URBAN MOBILITY
+                        </span>
+                        <h2 style={{ fontSize: "36px", fontWeight: "800", color: "#0f172a", margin: "14px 0 10px 0" }}>
+                            Core Capabilities of TrafficVision AI
+                        </h2>
+                        <p style={{ fontSize: "16px", color: "#64748b", lineHeight: "1.6" }}>
+                            Explore how machine learning and real-time mapping work together to optimize transit networks.
+                        </p>
+                    </div>
+
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                        gap: "26px"
+                    }}>
+                        {/* Feature 1 */}
+                        <div style={{
+                            padding: "30px",
+                            borderRadius: "20px",
+                            background: "#f8fafc",
+                            border: "1px solid #e2e8f0",
+                            transition: "all 0.25s"
+                        }}>
+                            <div style={{
+                                width: "48px",
+                                height: "48px",
+                                borderRadius: "14px",
+                                background: "#ecfdf5",
+                                color: "#059669",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "22px",
+                                marginBottom: "18px"
+                            }}>
+                                📊
+                            </div>
+                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                                Predictive Volume Modeling
+                            </h3>
+                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                                Trained on historical traffic records and weather parameters (rain, clouds, snow) using an optimized XGBoost engine.
+                            </p>
+                        </div>
+
+                        {/* Feature 2 */}
+                        <div style={{
+                            padding: "30px",
+                            borderRadius: "20px",
+                            background: "#f8fafc",
+                            border: "1px solid #e2e8f0",
+                            transition: "all 0.25s"
+                        }}>
+                            <div style={{
+                                width: "48px",
+                                height: "48px",
+                                borderRadius: "14px",
+                                background: "#eff6ff",
+                                color: "#2563eb",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "22px",
+                                marginBottom: "18px"
+                            }}>
+                                🗺️
+                            </div>
+                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                                Multi-Corridor Leaflet Maps
+                            </h3>
+                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                                Live interactive routing comparing distances, transit durations, and speed variations across urban corridors.
+                            </p>
+                        </div>
+
+                        {/* Feature 3 */}
+                        <div style={{
+                            padding: "30px",
+                            borderRadius: "20px",
+                            background: "#f8fafc",
+                            border: "1px solid #e2e8f0",
+                            transition: "all 0.25s"
+                        }}>
+                            <div style={{
+                                width: "48px",
+                                height: "48px",
+                                borderRadius: "14px",
+                                background: "#fef3c7",
+                                color: "#d97706",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "22px",
+                                marginBottom: "18px"
+                            }}>
+                                🚨
+                            </div>
+                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                                Accident Risk Advisories
+                            </h3>
+                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                                Automated warning triggers and email dispatches during severe weather conditions to safeguard commuters.
+                            </p>
+                        </div>
+
+                        {/* Feature 4 */}
+                        <div style={{
+                            padding: "30px",
+                            borderRadius: "20px",
+                            background: "#f8fafc",
+                            border: "1px solid #e2e8f0",
+                            transition: "all 0.25s"
+                        }}>
+                            <div style={{
+                                width: "48px",
+                                height: "48px",
+                                borderRadius: "14px",
+                                background: "#f0fdf4",
+                                color: "#16a34a",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "22px",
+                                marginBottom: "18px"
+                            }}>
+                                📄
+                            </div>
+                            <h3 style={{ fontSize: "19px", fontWeight: "700", color: "#0f172a", marginBottom: "8px" }}>
+                                Downloadable PDF Reports
+                            </h3>
+                            <p style={{ fontSize: "14.5px", color: "#64748b", lineHeight: "1.6" }}>
+                                Instant 2-page executive traffic intelligence summaries with neat autoTable formatting and eco-driving guidance.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ================= FAQ SECTION ================= */}
+            <section id="faq" style={{ padding: "80px 36px", background: "#f9fdfe" }}>
+                <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+                    <div style={{ textAlign: "center", marginBottom: "40px" }}>
+                        <span style={{ color: "#059669", fontSize: "13px", fontWeight: "800", letterSpacing: "0.06em", textTransform: "uppercase" }}>FAQ</span>
+                        <h2 style={{ fontSize: "32px", fontWeight: "800", color: "#0f172a", marginTop: "8px" }}>Frequently Asked Questions</h2>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                        {[
+                            {
+                                q: "How does TrafficVision AI predict congestion levels?",
+                                a: "Our system combines meteorological factors (rainfall, temperature, cloud cover) with calendar parameters (hour of day, weekday, holidays) in an XGBoost machine learning model trained on tens of thousands of historical journeys."
+                            },
+                            {
+                                q: "Can I download and export traffic predictions?",
+                                a: "Yes! Every route prediction generates an exportable, professional 2-page PDF report with detailed route parameters, driver advisories, and fuel-saving recommendations."
+                            },
+                            {
+                                q: "How are accident risk alerts triggered?",
+                                a: "When weather data indicates torrential rain, snow, or visibility drops below threshold levels alongside peak traffic volume, the system automatically surfaces high-risk alert banners and sends email notifications."
+                            }
+                        ].map((item, idx) => (
+                            <div
+                                key={idx}
+                                style={{
+                                    background: "#ffffff",
+                                    borderRadius: "16px",
+                                    border: "1px solid #e2e8f0",
+                                    padding: "20px 24px",
+                                    cursor: "pointer"
+                                }}
+                                onClick={() => toggleFaq(idx)}
+                            >
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "700", color: "#0f172a", fontSize: "16px" }}>
+                                    <span>{item.q}</span>
+                                    <span style={{ color: "#059669", fontSize: "20px" }}>{faqOpen === idx ? "−" : "+"}</span>
+                                </div>
+                                {faqOpen === idx && (
+                                    <p style={{ marginTop: "12px", color: "#475569", fontSize: "14.5px", lineHeight: "1.6" }}>
+                                        {item.a}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ================= FOOTER ================= */}
+            <footer style={{
+                background: "#0f172a",
+                color: "#94a3b8",
+                padding: "36px",
+                fontSize: "14px"
+            }}>
+                <div style={{
+                    maxWidth: "1400px",
+                    margin: "0 auto",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: "16px"
+                }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <span style={{ fontSize: "18px" }}>🌿</span>
+                        <span style={{ fontWeight: "700", color: "#ffffff" }}>TrafficVision AI</span>
+                        <span>— Smarter Roads. Safer Tomorrows.</span>
+                    </div>
+
+                    <div>
+                        © {new Date().getFullYear()} TrafficVision AI. All rights reserved.
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
