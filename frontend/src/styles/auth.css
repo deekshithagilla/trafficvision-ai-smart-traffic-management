@@ -394,6 +394,22 @@ body{
     transition: all 0.3s ease;
 }
 
+.hero-floating-card.register-card {
+    padding: 32px 36px 28px;
+}
+
+.hero-floating-card.register-card .card-subtitle {
+    margin-bottom: 18px;
+}
+
+.hero-floating-card.register-card .field-group {
+    margin-bottom: 12px;
+}
+
+.hero-floating-card.register-card .google-divider {
+    margin: 14px 0;
+}
+
 .hero-floating-card:hover {
     box-shadow: 0 28px 65px -10px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(226, 232, 240, 0.95);
 }
