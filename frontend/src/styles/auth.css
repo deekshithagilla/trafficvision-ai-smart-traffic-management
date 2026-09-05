@@ -193,10 +193,10 @@ body{
 .hero-login-topbar {
     position: relative;
     z-index: 10;
-    max-width: 1440px;
+    max-width: 1560px;
     width: 100%;
     margin: 0 auto;
-    padding: 24px 40px 10px;
+    padding: 24px 44px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -227,20 +227,21 @@ body{
 .hero-login-main {
     position: relative;
     z-index: 10;
-    max-width: 1440px;
+    max-width: 1560px;
     width: 100%;
     margin: 0 auto;
-    padding: 20px 40px 36px;
+    padding: 24px 44px 38px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 48px;
+    gap: 52px;
     flex: 1;
 }
 
-/* Left Hero Column - Filled completely with proper alignment */
+/* Left Hero Column - Filled completely with prominent enlarged sizing */
 .hero-left-col {
-    max-width: 660px;
+    max-width: 780px;
+    flex: 1.15;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -249,24 +250,24 @@ body{
 .hero-eyebrow-pill {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: #e0f2fe;
     border: 1.5px solid #bae6fd;
     color: #0284c7;
-    padding: 8px 20px;
+    padding: 10px 24px;
     border-radius: 50px;
-    font-size: 15px;
+    font-size: 16.5px;
     font-weight: 800;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .hero-grand-title {
-    font-size: clamp(44px, 4.6vw, 62px);
+    font-size: clamp(54px, 5.5vw, 76px);
     font-weight: 900;
     color: #0f172a;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin-bottom: 16px;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    margin-bottom: 20px;
 }
 
 .hero-grand-title span.blue-text {
@@ -276,10 +277,10 @@ body{
 
 .hero-description {
     color: #1e293b;
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 22px;
-    max-width: 630px;
+    font-size: 21px;
+    line-height: 1.65;
+    margin-bottom: 28px;
+    max-width: 740px;
     font-weight: 600;
 }
 
@@ -287,52 +288,52 @@ body{
 .hero-features-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
     width: 100%;
-    margin-bottom: 22px;
+    margin-bottom: 26px;
 }
 
 .hero-feature-card {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 16px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border: 1.5px solid rgba(226, 232, 240, 0.95);
-    border-radius: 16px;
-    padding: 13px 16px;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    border-radius: 18px;
+    padding: 16px 20px;
+    box-shadow: 0 5px 16px rgba(15, 23, 42, 0.07);
     transition: all 0.25s ease;
 }
 
 .hero-feature-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
     background: #ffffff;
 }
 
 .hero-card-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 19px;
+    font-size: 24px;
     flex-shrink: 0;
 }
 
 .hero-feature-card h4 {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 800;
     color: #0f172a;
-    margin: 0 0 2px 0;
+    margin: 0 0 4px 0;
 }
 
 .hero-feature-card p {
-    font-size: 12.5px;
+    font-size: 14px;
     color: #475569;
-    line-height: 1.4;
+    line-height: 1.45;
     margin: 0;
     font-weight: 500;
 }
@@ -342,12 +343,12 @@ body{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
     border: 1.5px solid rgba(226, 232, 240, 0.9);
-    border-radius: 16px;
-    padding: 12px 24px;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    border-radius: 18px;
+    padding: 16px 32px;
+    box-shadow: 0 5px 16px rgba(15, 23, 42, 0.06);
     width: 100%;
 }
 
@@ -357,22 +358,22 @@ body{
 }
 
 .stat-num {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 900;
     color: #2563eb;
     line-height: 1;
 }
 
 .stat-lbl {
-    font-size: 12.5px;
+    font-size: 14.5px;
     font-weight: 700;
     color: #475569;
-    margin-top: 3px;
+    margin-top: 4px;
 }
 
 .stat-divider {
-    width: 1px;
-    height: 28px;
+    width: 1.5px;
+    height: 38px;
     background: #cbd5e1;
 }
 
@@ -567,10 +568,10 @@ body{
 .hero-login-footer {
     position: relative;
     z-index: 10;
-    max-width: 1440px;
+    max-width: 1560px;
     width: 100%;
     margin: 0 auto;
-    padding: 16px 40px 22px;
+    padding: 16px 44px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -590,6 +591,7 @@ body{
     }
     .hero-left-col {
         align-items: center;
+        max-width: 100%;
     }
     .hero-features-row {
         justify-content: center;
@@ -600,5 +602,20 @@ body{
         flex-direction: column;
         gap: 8px;
         text-align: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-features-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-stats-row {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px;
+    }
+    .stat-divider {
+        width: 100%;
+        height: 1px;
     }
 }
