@@ -6,6 +6,13 @@ An AI-powered Smart Traffic Prediction and Congestion Management System that pre
 
 ---
 
+## 🌐 Live Production Deployments
+* **Web Application (Frontend)**: [https://trafficvision-ai-smart-traffic-mana-seven.vercel.app](https://trafficvision-ai-smart-traffic-mana-seven.vercel.app)
+* **REST API Backend**: [https://trafficvision-ai-smart-traffic-management-production.up.railway.app](https://trafficvision-ai-smart-traffic-management-production.up.railway.app)
+* **Interactive API Documentation (Swagger)**: [https://trafficvision-ai-smart-traffic-management-production.up.railway.app/docs](https://trafficvision-ai-smart-traffic-management-production.up.railway.app/docs)
+
+---
+
 # 📌 Project Overview
 
 TrafficVision AI helps users make better travel decisions by predicting future traffic conditions using weather and date-time parameters.
