@@ -178,7 +178,7 @@ export default function Landing() {
                     </Link>
 
                     {/* Get Started Button */}
-                    <button onClick={() => navigate("/prediction")} className="btn-green-pill">
+                    <button onClick={() => navigate("/login")} className="btn-green-pill">
                         <span>Get Started</span>
                         <span>→</span>
                     </button>

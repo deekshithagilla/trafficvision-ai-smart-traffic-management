@@ -120,3 +120,36 @@ body{
 .auth-link a:hover{
     text-decoration:underline;
 }
+
+/* Divider with horizontal lines */
+.google-divider{
+    display:flex;
+    align-items:center;
+    text-align:center;
+    margin:24px 0 20px;
+    color:#94a3b8;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.08em;
+}
+
+.google-divider::before,
+.google-divider::after{
+    content:'';
+    flex:1;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.google-divider span{
+    padding:0 14px;
+    color:#64748b;
+}
+
+/* Center Google Login Button Container */
+.google-login{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin-bottom:12px;
+}
