@@ -23,6 +23,7 @@ router = APIRouter(
 )
 
 
+@router.post("", response_model=TrafficResponse, include_in_schema=False)
 @router.post("/", response_model=TrafficResponse)
 def create_traffic(
     traffic: TrafficCreate,
@@ -47,6 +48,7 @@ def create_traffic(
     return new_record
 
 
+@router.get("", response_model=List[TrafficResponse], include_in_schema=False)
 @router.get("/", response_model=List[TrafficResponse])
 def get_all_traffic(
     location: Optional[str] = None,

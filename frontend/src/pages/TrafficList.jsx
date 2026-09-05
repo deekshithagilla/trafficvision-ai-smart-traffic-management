@@ -41,7 +41,7 @@ function TrafficList() {
     const loadRecords = async () => {
         try {
             const response = await api.get(
-                "/traffic",
+                "/traffic/",
                 getAuthHeader()
             );
 

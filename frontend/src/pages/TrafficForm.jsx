@@ -57,7 +57,7 @@ function TrafficForm() {
             setLoading(true);
 
             await api.post(
-                "/traffic",
+                "/traffic/",
                 traffic,
                 {
                     headers: {
