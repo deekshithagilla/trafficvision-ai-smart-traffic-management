@@ -181,9 +181,9 @@ body{
     bottom: 0;
     background: linear-gradient(
         to right,
-        rgba(240, 247, 255, 0.88) 0%,
-        rgba(240, 247, 255, 0.72) 45%,
-        rgba(240, 247, 255, 0.25) 100%
+        rgba(240, 247, 255, 0.94) 0%,
+        rgba(240, 247, 255, 0.85) 48%,
+        rgba(240, 247, 255, 0.35) 100%
     );
     pointer-events: none;
     z-index: 1;
@@ -193,10 +193,10 @@ body{
 .hero-login-topbar {
     position: relative;
     z-index: 10;
-    max-width: 1400px;
+    max-width: 1440px;
     width: 100%;
     margin: 0 auto;
-    padding: 22px 36px 10px;
+    padding: 24px 40px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -205,10 +205,10 @@ body{
 .hero-brand-logo-link {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     text-decoration: none;
     color: #0f172a;
-    font-size: 22px;
+    font-size: 27px;
     font-weight: 800;
     letter-spacing: -0.02em;
 }
@@ -218,29 +218,29 @@ body{
 }
 
 .hero-top-tagline {
-    color: #475569;
-    font-size: 14px;
-    font-weight: 600;
+    color: #334155;
+    font-size: 16.5px;
+    font-weight: 700;
 }
 
 /* Main Split Area */
 .hero-login-main {
     position: relative;
     z-index: 10;
-    max-width: 1400px;
+    max-width: 1440px;
     width: 100%;
     margin: 0 auto;
-    padding: 20px 36px 40px;
+    padding: 24px 40px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 40px;
+    gap: 48px;
     flex: 1;
 }
 
 /* Left Hero Column */
 .hero-left-col {
-    max-width: 580px;
+    max-width: 640px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -249,24 +249,24 @@ body{
 .hero-eyebrow-pill {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: #e0f2fe;
-    border: 1px solid #bae6fd;
+    border: 1.5px solid #bae6fd;
     color: #0284c7;
-    padding: 6px 16px;
+    padding: 8px 20px;
     border-radius: 50px;
-    font-size: 13.5px;
-    font-weight: 700;
-    margin-bottom: 20px;
+    font-size: 15.5px;
+    font-weight: 800;
+    margin-bottom: 22px;
 }
 
 .hero-grand-title {
-    font-size: clamp(38px, 4.5vw, 56px);
-    font-weight: 800;
+    font-size: clamp(48px, 5.2vw, 68px);
+    font-weight: 900;
     color: #0f172a;
-    line-height: 1.12;
+    line-height: 1.1;
     letter-spacing: -0.03em;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .hero-grand-title span.blue-text {
@@ -275,85 +275,86 @@ body{
 }
 
 .hero-description {
-    color: #334155;
-    font-size: 16.5px;
+    color: #1e293b;
+    font-size: 20px;
     line-height: 1.65;
-    margin-bottom: 32px;
-    max-width: 500px;
+    margin-bottom: 36px;
+    max-width: 580px;
+    font-weight: 500;
 }
 
 /* 3 Feature Badges */
 .hero-features-row {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
 .hero-feature-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.9);
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(226, 232, 240, 0.9);
-    padding: 10px 16px;
+    border: 1.5px solid rgba(226, 232, 240, 0.95);
+    padding: 12px 20px;
     border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
 }
 
 .hero-feature-icon-wrap {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .hero-feature-label {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: #0f172a;
     white-space: nowrap;
 }
 
 /* Floating White Login Card (Right Column) */
 .hero-login-card-wrap {
     width: 100%;
-    max-width: 430px;
+    max-width: 500px;
     position: relative;
 }
 
 .hero-floating-card {
     background: #ffffff;
-    border-radius: 24px;
-    padding: 36px 32px;
-    box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(226, 232, 240, 0.8);
+    border-radius: 28px;
+    padding: 44px 38px;
+    box-shadow: 0 24px 55px -10px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(226, 232, 240, 0.85);
     position: relative;
     z-index: 2;
     transition: all 0.3s ease;
 }
 
 .hero-floating-card:hover {
-    box-shadow: 0 25px 55px -8px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.9);
+    box-shadow: 0 28px 65px -10px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(226, 232, 240, 0.95);
 }
 
 .card-top-icon {
     text-align: center;
-    font-size: 38px;
-    margin-bottom: 6px;
+    font-size: 46px;
+    margin-bottom: 8px;
     line-height: 1;
 }
 
 .card-title {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 800;
     color: #0f172a;
     letter-spacing: -0.02em;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .card-title span.blue-text {
@@ -363,38 +364,39 @@ body{
 .card-subtitle {
     text-align: center;
     color: #64748b;
-    font-size: 13.5px;
-    margin-bottom: 24px;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 28px;
 }
 
 /* Form Input Groups with Icons */
 .field-group {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .field-label {
     display: block;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 700;
     color: #0f172a;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .field-input-box {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     background: #ffffff;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 11px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 14px;
+    padding: 13px 16px;
     transition: all 0.2s ease;
 }
 
 .field-input-box:focus-within {
     border-color: #2563eb;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
 }
 
 .field-icon {
@@ -409,7 +411,7 @@ body{
     flex: 1;
     border: none;
     outline: none;
-    font-size: 14.5px;
+    font-size: 15.5px;
     color: #0f172a;
     font-family: inherit;
     background: transparent;
@@ -438,14 +440,14 @@ body{
 /* Forgot Password */
 .forgot-pass-row {
     text-align: right;
-    margin-top: 6px;
-    margin-bottom: 18px;
+    margin-top: 8px;
+    margin-bottom: 20px;
 }
 
 .forgot-pass-link {
     color: #2563eb;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     transition: color 0.2s;
 }
@@ -458,18 +460,18 @@ body{
 /* Blue Action Button */
 .btn-blue-action {
     width: 100%;
-    padding: 13px 20px;
+    padding: 15px 24px;
     background: #2563eb;
     color: #ffffff;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 14px;
+    font-size: 17.5px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
     transition: all 0.25s ease;
 }
@@ -477,7 +479,7 @@ body{
 .btn-blue-action:hover {
     background: #1d4ed8;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.45);
 }
 
 .btn-blue-action:disabled {
@@ -490,9 +492,9 @@ body{
 /* Bottom Sign Up Link */
 .card-bottom-link {
     text-align: center;
-    font-size: 13.5px;
+    font-size: 14.5px;
     color: #475569;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .card-bottom-link a {
@@ -509,15 +511,16 @@ body{
 .hero-login-footer {
     position: relative;
     z-index: 10;
-    max-width: 1400px;
+    max-width: 1440px;
     width: 100%;
     margin: 0 auto;
-    padding: 16px 36px 20px;
+    padding: 18px 40px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13.5px;
-    color: #475569;
+    font-size: 14.5px;
+    color: #334155;
+    font-weight: 600;
 }
 
 /* Responsive Collapse */
