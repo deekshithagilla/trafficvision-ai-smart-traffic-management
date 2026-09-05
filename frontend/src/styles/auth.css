@@ -153,3 +153,392 @@ body{
     width:100%;
     margin-bottom:12px;
 }
+
+/* ========================================================
+   HERO SPLIT LOGIN SCREEN (Matching Reference Mockup)
+   ======================================================== */
+
+.hero-login-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: url('/smart-city-highway-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #0f172a;
+    overflow-x: hidden;
+}
+
+/* Subtle gradient scrim over the background for crisp contrast */
+.hero-login-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to right,
+        rgba(240, 247, 255, 0.88) 0%,
+        rgba(240, 247, 255, 0.72) 45%,
+        rgba(240, 247, 255, 0.25) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Top Navigation Bar */
+.hero-login-topbar {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 22px 36px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-brand-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.hero-brand-logo-link span.brand-ai {
+    color: #2563eb;
+}
+
+.hero-top-tagline {
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Main Split Area */
+.hero-login-main {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex: 1;
+}
+
+/* Left Hero Column */
+.hero-left-col {
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.hero-eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+    color: #0284c7;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-grand-title {
+    font-size: clamp(38px, 4.5vw, 56px);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+}
+
+.hero-grand-title span.blue-text {
+    color: #2563eb;
+    display: block;
+}
+
+.hero-description {
+    color: #334155;
+    font-size: 16.5px;
+    line-height: 1.65;
+    margin-bottom: 32px;
+    max-width: 500px;
+}
+
+/* 3 Feature Badges */
+.hero-features-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.hero-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 10px 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.hero-feature-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.hero-feature-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+/* Floating White Login Card (Right Column) */
+.hero-login-card-wrap {
+    width: 100%;
+    max-width: 430px;
+    position: relative;
+}
+
+.hero-floating-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 36px 32px;
+    box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(226, 232, 240, 0.8);
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.hero-floating-card:hover {
+    box-shadow: 0 25px 55px -8px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.card-top-icon {
+    text-align: center;
+    font-size: 38px;
+    margin-bottom: 6px;
+    line-height: 1;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.card-title span.blue-text {
+    color: #2563eb;
+}
+
+.card-subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 13.5px;
+    margin-bottom: 24px;
+}
+
+/* Form Input Groups with Icons */
+.field-group {
+    margin-bottom: 16px;
+}
+
+.field-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.field-input-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 11px 14px;
+    transition: all 0.2s ease;
+}
+
+.field-input-box:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.field-icon {
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.field-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14.5px;
+    color: #0f172a;
+    font-family: inherit;
+    background: transparent;
+}
+
+.field-input::placeholder {
+    color: #94a3b8;
+}
+
+.field-toggle-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.field-toggle-btn:hover {
+    color: #2563eb;
+}
+
+/* Forgot Password */
+.forgot-pass-row {
+    text-align: right;
+    margin-top: 6px;
+    margin-bottom: 18px;
+}
+
+.forgot-pass-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.forgot-pass-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Blue Action Button */
+.btn-blue-action {
+    width: 100%;
+    padding: 13px 20px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    transition: all 0.25s ease;
+}
+
+.btn-blue-action:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+}
+
+.btn-blue-action:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Bottom Sign Up Link */
+.card-bottom-link {
+    text-align: center;
+    font-size: 13.5px;
+    color: #475569;
+    margin-top: 4px;
+}
+
+.card-bottom-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.card-bottom-link a:hover {
+    text-decoration: underline;
+}
+
+/* Bottom Footer Bar */
+.hero-login-footer {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px 36px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: #475569;
+}
+
+/* Responsive Collapse */
+@media (max-width: 960px) {
+    .hero-login-main {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 20px 30px;
+        gap: 30px;
+    }
+    .hero-left-col {
+        align-items: center;
+    }
+    .hero-features-row {
+        justify-content: center;
+    }
+    .hero-login-topbar,
+    .hero-login-footer {
+        padding: 16px 20px;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
