@@ -1,6 +1,10 @@
 from dotenv import load_dotenv
 import os
 
+# Load .env from backend folder or current working directory
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+if os.path.exists(env_path):
+    load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -18,6 +22,8 @@ MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
 MAIL_STARTTLS = os.getenv("MAIL_STARTTLS", "True") == "True"
 MAIL_SSL_TLS = os.getenv("MAIL_SSL_TLS", "False") == "True"
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 # Frontend
 FRONTEND_URL = os.getenv(

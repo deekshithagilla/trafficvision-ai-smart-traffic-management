@@ -21,12 +21,14 @@ from app.config import (
     MAIL_SSL_TLS,
     FRONTEND_URL,
     ADMIN_INVITATION_EXPIRE_HOURS,
+    BREVO_API_KEY,
+    RESEND_API_KEY,
 )
 
 
 def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
     """Dispatches email via Brevo HTTP API (primary), Resend HTTP API, or falls back to SMTP."""
-    brevo_key = os.getenv("BREVO_API_KEY", "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")
+    brevo_key = BREVO_API_KEY or os.getenv("BREVO_API_KEY")
     if brevo_key:
         print(f"Attempting to send email via Brevo API to {to_email}...")
         url = "https://api.brevo.com/v3/smtp/email"
@@ -52,7 +54,7 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
         except Exception as e:
             print(f"Brevo HTTP API failed: {e}.")
 
-    resend_key = os.getenv("RESEND_API_KEY")
+    resend_key = RESEND_API_KEY or os.getenv("RESEND_API_KEY")
     if resend_key:
         print(f"Attempting to send email via Resend API to {to_email}...")
         url = "https://api.resend.com/emails"
