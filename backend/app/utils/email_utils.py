@@ -26,8 +26,10 @@ from app.config import (
 )
 
 
-def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
-    """Dispatches email via Brevo HTTP API (primary), Resend HTTP API, or falls back to SMTP."""
+def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> bool:
+    """Dispatches email via Brevo HTTP API (primary), Resend HTTP API, or falls back to SMTP.
+    Returns True if delivery succeeded by any provider, False if all failed.
+    """
     brevo_key = BREVO_API_KEY or os.getenv("BREVO_API_KEY")
     if brevo_key:
         print(f"Attempting to send email via Brevo API to {to_email}...")
@@ -48,7 +50,7 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
             response = requests.post(url, json=payload, headers=headers, timeout=5)
             if response.status_code in (200, 201):
                 print(f"Email sent successfully to {to_email} via Brevo API.")
-                return
+                return True
             else:
                 print(f"Brevo API error: {response.status_code} - {response.text}.")
         except Exception as e:
@@ -78,7 +80,7 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
             response = requests.post(url, json=payload, headers=headers, timeout=5)
             if response.status_code in (200, 201):
                 print(f"Email sent successfully to {to_email} via Resend API.")
-                return
+                return True
             else:
                 print(f"Resend API error: {response.status_code} - {response.text}. Falling back to SMTP...")
         except Exception as e:
@@ -103,8 +105,10 @@ def _send_email_http_or_smtp(to_email: str, subject: str, body: str) -> None:
                 server.login(MAIL_USERNAME, MAIL_PASSWORD)
                 server.sendmail(MAIL_FROM, [to_email], message.as_string())
         print("Email sent successfully via SMTP.")
+        return True
     except Exception as err:
         print(f"SMTP delivery failed: {err}")
+        return False
 
 
 def generate_reset_token() -> str:
@@ -112,7 +116,7 @@ def generate_reset_token() -> str:
     return secrets.token_urlsafe(32)
 
 
-def send_reset_email(to_email: str, token: str) -> None:
+def send_reset_email(to_email: str, token: str) -> bool:
     """Sends the password-reset email."""
     reset_link = f"{FRONTEND_URL}/reset-password?token={token}"
 
@@ -127,7 +131,7 @@ def send_reset_email(to_email: str, token: str) -> None:
         "TrafficVision Team"
     )
 
-    _send_email_http_or_smtp(to_email, "TrafficVision Password Reset", body)
+    return _send_email_http_or_smtp(to_email, "TrafficVision Password Reset", body)
 
 
 def send_accident_risk_email(
@@ -143,7 +147,7 @@ def send_accident_risk_email(
     weather_summary: str,
     expected_delay: float,
     recommended_route: str,
-) -> None:
+) -> bool:
     """Sends a software-generated accident-risk warning."""
     subject = (
         "TrafficVision AI \u2014 Critical Traffic Safety Alert"
@@ -176,7 +180,7 @@ def send_accident_risk_email(
         "TrafficVision Team"
     )
 
-    _send_email_http_or_smtp(to_email, subject, body)
+    return _send_email_http_or_smtp(to_email, subject, body)
 
 
 def generate_invitation_token() -> str:
@@ -184,7 +188,7 @@ def generate_invitation_token() -> str:
     return secrets.token_urlsafe(32)
 
 
-def send_admin_invitation_email(to_email: str, token: str) -> None:
+def send_admin_invitation_email(to_email: str, token: str) -> bool:
     """Sends the admin-invitation email."""
     invitation_link = f"{FRONTEND_URL}/accept-invitation?token={token}"
 
@@ -203,4 +207,4 @@ def send_admin_invitation_email(to_email: str, token: str) -> None:
         "TrafficVision Team"
     )
 
-    _send_email_http_or_smtp(to_email, "TrafficVision Admin Invitation", body)
+    return _send_email_http_or_smtp(to_email, "TrafficVision Admin Invitation", body)

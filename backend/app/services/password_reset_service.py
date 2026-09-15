@@ -6,6 +6,7 @@ traffic_analytics_service, ai_recommendation_service, admin_invitation_service).
  
 from datetime import datetime, timedelta
  
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
  
@@ -17,16 +18,16 @@ from app.utils.token_utils import hash_token
 RESET_TOKEN_EXPIRY_MINUTES = 15
  
  
-def request_password_reset(db: Session, email: str) -> None:
+def request_password_reset(db: Session, email: str) -> bool:
     """Generates and emails a reset token if the email belongs to a real
-    account. Always returns None either way - the caller (route) sends
-    back the same generic message regardless of the result, so this
-    function never leaks whether an email is registered."""
- 
-    user = db.query(User).filter(User.email == email).first()
- 
+    account. Case-insensitive and trimmed. Returns True if email was dispatched,
+    False otherwise."""
+
+    clean_email = (email or "").strip().lower()
+    user = db.query(User).filter(func.lower(User.email) == clean_email).first()
+
     if not user:
-        return
+        return False
  
     raw_token = generate_reset_token()
  
@@ -55,7 +56,7 @@ def request_password_reset(db: Session, email: str) -> None:
     # The raw token is only ever used here, to build the emailed
     # link - it is never stored anywhere, logged, or returned from
     # this function.
-    send_reset_email(user.email, raw_token)
+    return send_reset_email(user.email, raw_token)
  
  
 def reset_password(db: Session, token: str, new_password: str) -> bool:

@@ -17,7 +17,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Tuple
 
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 
 from app.models.traffic_alert import TrafficAlert
@@ -296,8 +296,8 @@ def _recent_accident_email_already_sent(
         db.query(TrafficAlert)
         .filter(
             TrafficAlert.user_id == user_id,
-            TrafficAlert.source == source,
-            TrafficAlert.destination == destination,
+            func.lower(TrafficAlert.source) == source.strip().lower(),
+            func.lower(TrafficAlert.destination) == destination.strip().lower(),
             TrafficAlert.email_sent.is_(True),
             TrafficAlert.email_sent_at.isnot(None),
             TrafficAlert.email_sent_at >= cutoff,
@@ -323,17 +323,19 @@ def _maybe_send_accident_risk_email(
     predicted_value: int,
 ) -> None:
     """Sends the accident-risk email when the deterministic threshold is
-    met and the cooldown allows it. Never raises - an SMTP/network
-    failure here must never break the prediction request that triggered
-    it (see traffic_alert_service module docstring / project
-    requirements). alert.email_sent / email_sent_at are only updated on
-    a confirmed successful send.
+    met (or alert is High/Critical severity) and the cooldown allows it.
+    Never raises - an SMTP/network failure here must never break the
+    prediction request that triggered it. alert.email_sent / email_sent_at
+    are only updated on a confirmed successful send.
     """
 
     if not ACCIDENT_ALERT_EMAIL_ENABLED:
         return
 
-    if alert.accident_risk_score < ACCIDENT_ALERT_EMAIL_THRESHOLD:
+    # Send email if risk score meets threshold OR severity is High or Critical
+    is_high_or_critical = alert.severity in ("High", "Critical")
+    meets_score = alert.accident_risk_score >= ACCIDENT_ALERT_EMAIL_THRESHOLD
+    if not (is_high_or_critical or meets_score):
         return
 
     if user_id is None:
@@ -349,7 +351,7 @@ def _maybe_send_accident_risk_email(
         if user is None or not user.email:
             return
 
-        send_accident_risk_email(
+        sent = send_accident_risk_email(
             user.email,
             is_critical=(alert.severity == "Critical"),
             source=alert.source,
@@ -363,10 +365,16 @@ def _maybe_send_accident_risk_email(
             recommended_route=alert.recommended_route or "N/A",
         )
 
-        alert.email_sent = True
-        alert.email_sent_at = datetime.now(timezone.utc)
-        db.commit()
-        db.refresh(alert)
+        if sent:
+            alert.email_sent = True
+            alert.email_sent_at = datetime.now(timezone.utc)
+            db.commit()
+            db.refresh(alert)
+        else:
+            logger.warning(
+                "Accident-risk email could not be delivered for alert id=%s (user_id=%s). Email provider returned failure.",
+                alert.id, user_id
+            )
 
     except Exception:
         # Deliberately broad: SMTP/network/auth failures must never

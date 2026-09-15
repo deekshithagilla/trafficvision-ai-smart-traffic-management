@@ -865,9 +865,10 @@ def forgot_password(
     db: Session = Depends(get_db)
 ):
 
+    clean_email = (payload.email or "").strip().lower()
     password_reset_service.request_password_reset(
         db,
-        payload.email
+        clean_email
     )
 
     return {

@@ -28,7 +28,9 @@ RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 # Frontend
 FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
-    "http://localhost:5173"
+    "https://trafficvision-ai-smart-traffic-mana-seven.vercel.app"
+    if os.getenv("RAILWAY_ENVIRONMENT")
+    else "http://localhost:5173"
 )
 
 # Google OAuth
@@ -48,10 +50,8 @@ ADMIN_INVITATION_EXPIRE_HOURS = int(
 # exactly as before; only the outbound email is skipped.
 #
 # ACCIDENT_ALERT_EMAIL_THRESHOLD - accident_risk_score (0-100) at or
-# above which an email is sent. Defaults to the same 75.0 value already
-# used by CRITICAL_RISK_THRESHOLD in traffic_alert_service.py, so by
-# default "email-worthy" lines up with "Critical-severity-worthy" - but
-# it is a separate, independently configurable setting.
+# above which an email is sent. Defaults to 50.0 so both High and
+# Critical risk predictions trigger safety alert emails.
 #
 # ACCIDENT_ALERT_EMAIL_COOLDOWN_MINUTES - minimum time between two
 # accident-risk emails for the same user + source + destination, to
@@ -61,7 +61,7 @@ ACCIDENT_ALERT_EMAIL_ENABLED = (
     os.getenv("ACCIDENT_ALERT_EMAIL_ENABLED", "True") == "True"
 )
 ACCIDENT_ALERT_EMAIL_THRESHOLD = float(
-    os.getenv("ACCIDENT_ALERT_EMAIL_THRESHOLD", "75")
+    os.getenv("ACCIDENT_ALERT_EMAIL_THRESHOLD", "50")
 )
 ACCIDENT_ALERT_EMAIL_COOLDOWN_MINUTES = int(
     os.getenv("ACCIDENT_ALERT_EMAIL_COOLDOWN_MINUTES", "30")
