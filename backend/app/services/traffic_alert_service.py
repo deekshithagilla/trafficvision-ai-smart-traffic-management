@@ -288,6 +288,9 @@ def _recent_accident_email_already_sent(
     if user_id is None:
         return False
 
+    if ACCIDENT_ALERT_EMAIL_COOLDOWN_MINUTES <= 0:
+        return False
+
     cutoff = datetime.now(timezone.utc) - timedelta(
         minutes=ACCIDENT_ALERT_EMAIL_COOLDOWN_MINUTES
     )
