@@ -532,14 +532,31 @@ function TrafficMap({
     // ==================================================
     // ACTIVE ROUTE
     //
-    // If selectedRouteIndex is invalid, use the
-    // fastest route.
+    // Sync with parent selectedRouteIndex prop and
+    // keep track of internally clicked route.
     // ==================================================
 
+    const [
+        selectedRouteIdx,
+        setSelectedRouteIdx
+    ] = useState(selectedRouteIndex ?? 0);
+
+    useEffect(() => {
+        if (selectedRouteIndex !== undefined && selectedRouteIndex !== null) {
+            setSelectedRouteIdx(selectedRouteIndex);
+        }
+    }, [selectedRouteIndex]);
+
+    useEffect(() => {
+        if (bestRouteIndex !== undefined && bestRouteIndex !== null) {
+            setSelectedRouteIdx(bestRouteIndex);
+        }
+    }, [bestRouteIndex]);
+
     const activeRouteIndex =
-        selectedRouteIndex >= 0 &&
-        selectedRouteIndex < routes.length
-            ? selectedRouteIndex
+        selectedRouteIdx >= 0 &&
+        selectedRouteIdx < routes.length
+            ? selectedRouteIdx
             : bestRouteIndex;
 
 
@@ -562,6 +579,8 @@ function TrafficMap({
     const handleRouteClick = (
         index
     ) => {
+
+        setSelectedRouteIdx(index);
 
         const selectedRoute =
             routes[index];
@@ -732,6 +751,14 @@ function TrafficMap({
                             index ===
                             bestRouteIndex;
 
+                        // Calculate sequential alternative number (1, 2, ...) among non-best routes
+                        let altNumber = 0;
+                        for (let i = 0; i <= index; i++) {
+                            if (i !== bestRouteIndex) {
+                                altNumber++;
+                            }
+                        }
+
 
                         return (
 
@@ -830,28 +857,81 @@ function TrafficMap({
 
                                 <Popup>
 
-                                    <div>
+                                    <div
+                                        style={{
+                                            minWidth: "210px",
+                                            padding: "4px"
+                                        }}
+                                    >
 
-                                        <h3
+                                        <div
                                             style={{
-                                                margin:
-                                                    "0 0 8px 0"
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                marginBottom: "8px",
+                                                gap: "8px"
                                             }}
                                         >
 
-                                            {isSelected
-                                                ? "⭐ Selected Route"
-                                                : isBest
-                                                    ? "🏆 Best Route"
-                                                    : `Alternative Route ${index + 1}`}
+                                            <span
+                                                style={{
+                                                    background: isBest ? "#16a34a" : "#475569",
+                                                    color: "#ffffff",
+                                                    padding: "3px 9px",
+                                                    borderRadius: "12px",
+                                                    fontSize: "12px",
+                                                    fontWeight: "bold",
+                                                    display: "inline-block"
+                                                }}
+                                            >
+
+                                                {isBest ? "🏆 Recommended Route" : `Alternative Route ${altNumber}`}
+
+                                            </span>
+
+                                            {isSelected && (
+
+                                                <span
+                                                    style={{
+                                                        background: "#eff6ff",
+                                                        color: "#2563eb",
+                                                        border: "1px solid #bfdbfe",
+                                                        padding: "2px 8px",
+                                                        borderRadius: "12px",
+                                                        fontSize: "11px",
+                                                        fontWeight: "600"
+                                                    }}
+                                                >
+
+                                                    ✓ Selected
+
+                                                </span>
+
+                                            )}
+
+                                        </div>
+
+                                        <h3
+                                            style={{
+                                                margin: "0 0 6px 0",
+                                                color: "#1e3a8a",
+                                                fontSize: "15px"
+                                            }}
+                                        >
+
+                                            {isBest
+                                                ? `Route ${index + 1} (Fastest Route)`
+                                                : `Route ${index + 1} • Alternative Route ${altNumber}`}
 
                                         </h3>
 
 
                                         <p
                                             style={{
-                                                margin:
-                                                    "4px 0"
+                                                margin: "4px 0",
+                                                fontSize: "13px",
+                                                color: "#334155"
                                             }}
                                         >
 
@@ -875,8 +955,9 @@ function TrafficMap({
 
                                         <p
                                             style={{
-                                                margin:
-                                                    "4px 0"
+                                                margin: "4px 0",
+                                                fontSize: "13px",
+                                                color: "#334155"
                                             }}
                                         >
 
@@ -902,16 +983,14 @@ function TrafficMap({
 
                                             <p
                                                 style={{
-                                                    margin:
-                                                        "8px 0 0 0",
-                                                    color:
-                                                        "#16a34a",
-                                                    fontWeight:
-                                                        "bold"
+                                                    margin: "8px 0 0 0",
+                                                    color: "#16a34a",
+                                                    fontWeight: "bold",
+                                                    fontSize: "12px"
                                                 }}
                                             >
 
-                                                ✓ Fastest route
+                                                ✓ Fastest route with lowest travel time
 
                                             </p>
 
@@ -923,16 +1002,31 @@ function TrafficMap({
 
                                                 <p
                                                     style={{
-                                                        margin:
-                                                            "8px 0 0 0",
-                                                        color:
-                                                            "#2563eb",
-                                                        fontWeight:
-                                                            "bold"
+                                                        margin: "8px 0 0 0",
+                                                        color: "#2563eb",
+                                                        fontWeight: "bold",
+                                                        fontSize: "12px"
                                                     }}
                                                 >
 
-                                                    ✓ Currently selected
+                                                    ✓ Currently selected alternative route
+
+                                                </p>
+
+                                            )}
+
+                                        {!isSelected &&
+                                            !isBest && (
+
+                                                <p
+                                                    style={{
+                                                        margin: "8px 0 0 0",
+                                                        color: "#64748b",
+                                                        fontSize: "12px"
+                                                    }}
+                                                >
+
+                                                    👉 Click to select Alternative Route {altNumber}
 
                                                 </p>
 

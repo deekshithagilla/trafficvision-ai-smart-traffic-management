@@ -44,6 +44,7 @@ function Prediction() {
     const [route, setRoute] = useState("");
     const [routes, setRoutes] = useState([]);
     const [bestRoute, setBestRoute] = useState(null);
+    const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
     const [savedTime, setSavedTime] = useState("");
     const [reason, setReason] = useState("");
     const [status, setStatus] = useState("");
@@ -164,6 +165,11 @@ function Prediction() {
             );
 
             setBestRoute(recommendedRoute);
+
+            const fastestIdx = availableRoutes.findIndex(
+                (r) => r.id === recommendedRoute.id
+            );
+            setSelectedRouteIndex(fastestIdx >= 0 ? fastestIdx : 0);
 
             setActualDistance(recommendedRoute.distance);
 
@@ -361,6 +367,33 @@ function Prediction() {
 
             setLoading(false);
 
+        }
+    };
+
+    const handleRouteSelected = (index, summary) => {
+        setSelectedRouteIndex(index);
+        const selRoute = routes[index];
+        if (selRoute) {
+            setRoute(`Route ${selRoute.id}`);
+            setActualDistance(selRoute.distance);
+            setTravelTime(selRoute.duration);
+
+            let speed = 60;
+            if (prediction !== null) {
+                if (prediction < 2500) {
+                    speed = 60;
+                } else if (prediction < 4500) {
+                    speed = 40;
+                } else {
+                    speed = 25;
+                }
+                setAvgSpeed(speed);
+
+                const travelTimeMinutes = Number(selRoute.duration);
+                const freeFlowTime = (Number(selRoute.distance) / 60) * 60;
+                const currentDelay = Math.max(0, Math.round(travelTimeMinutes - freeFlowTime));
+                setDelay(currentDelay);
+            }
         }
     };
 
@@ -1200,6 +1233,8 @@ function Prediction() {
                             destination={destinationCoords}
                             congestion={congestion}
                             heatmap={heatmap}
+                            selectedRouteIndex={selectedRouteIndex}
+                            onRouteSelected={handleRouteSelected}
                             onRouteLoaded={(summary) => {
 
                                 setTravelTime(
@@ -1280,57 +1315,116 @@ function Prediction() {
                                         gap: "15px"
                                     }}
                                 >
-                                    {routes.map((item) => (
-                                        <div
-                                            key={item.id}
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                                alignItems: "center",
-                                                padding: "18px",
-                                                borderRadius: "15px",
-                                                background:
-                                                    bestRoute?.id === item.id
+                                    {routes.map((item, index) => {
+                                        const isBest = bestRoute?.id === item.id;
+                                        const isSelected = selectedRouteIndex === index;
+
+                                        let altNumber = 0;
+                                        for (let i = 0; i <= index; i++) {
+                                            if (routes[i].id !== bestRoute?.id) {
+                                                altNumber++;
+                                            }
+                                        }
+
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                onClick={() => handleRouteSelected(index, item)}
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    alignItems: "center",
+                                                    padding: "18px",
+                                                    borderRadius: "15px",
+                                                    cursor: "pointer",
+                                                    transition: "all 0.2s ease",
+                                                    background: isSelected
                                                         ? "#dbeafe"
-                                                        : "#f8fafc",
-                                                border:
-                                                    bestRoute?.id === item.id
+                                                        : isBest
+                                                            ? "#f0fdf4"
+                                                            : "#f8fafc",
+                                                    border: isSelected
                                                         ? "2px solid #2563eb"
-                                                        : "1px solid #e5e7eb"
-                                            }}
-                                        >
-                                            <div>
-                                                <h3 style={{ margin: 0 }}>
-                                                    Route {item.id}
-                                                    {bestRoute?.id === item.id && " ⭐"}
-                                                </h3>
+                                                        : isBest
+                                                            ? "2px solid #16a34a"
+                                                            : "1px solid #e5e7eb"
+                                                }}
+                                            >
+                                                <div>
+                                                    <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                                                        Route {item.id}
+                                                        {isBest ? (
+                                                            <span style={{ fontSize: "12px", background: "#dcfce7", color: "#16a34a", padding: "2px 8px", borderRadius: "10px", fontWeight: "600" }}>
+                                                                🏆 Recommended
+                                                            </span>
+                                                        ) : (
+                                                            <span style={{ fontSize: "12px", background: "#f1f5f9", color: "#475569", padding: "2px 8px", borderRadius: "10px", fontWeight: "600" }}>
+                                                                Alternative Route {altNumber}
+                                                            </span>
+                                                        )}
+                                                        {isSelected && (
+                                                            <span style={{ fontSize: "12px", background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", padding: "2px 8px", borderRadius: "10px", fontWeight: "600" }}>
+                                                                ✓ Active
+                                                            </span>
+                                                        )}
+                                                    </h3>
 
-                                                <p style={{ margin: "8px 0" }}>
-                                                    📏 Distance :
-                                                    <b> {item.distance} km</b>
-                                                </p>
+                                                    <p style={{ margin: "8px 0" }}>
+                                                        📏 Distance :
+                                                        <b> {item.distance} km</b>
+                                                    </p>
 
-                                                <p style={{ margin: 0 }}>
-                                                    ⏱ Time :
-                                                    <b> {item.duration} min</b>
-                                                </p>
-                                            </div>
-
-                                            {bestRoute?.id === item.id && (
-                                                <div
-                                                    style={{
-                                                        background: "#2563eb",
-                                                        color: "white",
-                                                        padding: "8px 14px",
-                                                        borderRadius: "25px",
-                                                        fontWeight: "bold"
-                                                    }}
-                                                >
-                                                    Recommended
+                                                    <p style={{ margin: 0 }}>
+                                                        ⏱ Time :
+                                                        <b> {item.duration} min</b>
+                                                    </p>
                                                 </div>
-                                            )}
-                                        </div>
-                                    ))}
+
+                                                <div>
+                                                    {isSelected ? (
+                                                        <div
+                                                            style={{
+                                                                background: "#2563eb",
+                                                                color: "white",
+                                                                padding: "8px 14px",
+                                                                borderRadius: "25px",
+                                                                fontWeight: "bold",
+                                                                fontSize: "13px"
+                                                            }}
+                                                        >
+                                                            Selected
+                                                        </div>
+                                                    ) : isBest ? (
+                                                        <div
+                                                            style={{
+                                                                background: "#16a34a",
+                                                                color: "white",
+                                                                padding: "8px 14px",
+                                                                borderRadius: "25px",
+                                                                fontWeight: "bold",
+                                                                fontSize: "13px"
+                                                            }}
+                                                        >
+                                                            Fastest
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            style={{
+                                                                background: "#f1f5f9",
+                                                                color: "#475569",
+                                                                padding: "8px 14px",
+                                                                borderRadius: "25px",
+                                                                fontSize: "13px",
+                                                                fontWeight: "500"
+                                                            }}
+                                                        >
+                                                            Select Route
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
@@ -1394,50 +1488,73 @@ function Prediction() {
                             🚗 Available Routes
                         </h2>
 
-                        {routes.map((r) => (
+                        {routes.map((r, index) => {
+                            const isBest = bestRoute?.id === r.id;
+                            const isSelected = selectedRouteIndex === index;
 
-                            <div
-                                key={r.id}
-                                style={{
-                                    padding: "18px",
-                                    marginBottom: "15px",
-                                    borderRadius: "12px",
-                                    border:
-                                        route === `Route ${r.id}`
-                                            ? "3px solid #16a34a"
-                                            : "1px solid #ddd",
-                                    background:
-                                        route === `Route ${r.id}`
-                                            ? "#ecfdf5"
-                                            : "#fafafa"
-                                }}
-                            >
+                            let altNumber = 0;
+                            for (let i = 0; i <= index; i++) {
+                                if (routes[i].id !== bestRoute?.id) {
+                                    altNumber++;
+                                }
+                            }
 
-                                <h3>
+                            return (
+                                <div
+                                    key={r.id}
+                                    onClick={() => handleRouteSelected(index, r)}
+                                    style={{
+                                        padding: "18px",
+                                        marginBottom: "15px",
+                                        borderRadius: "12px",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s ease",
+                                        border:
+                                            isSelected
+                                                ? "3px solid #2563eb"
+                                                : isBest
+                                                    ? "2px solid #16a34a"
+                                                    : "1px solid #ddd",
+                                        background:
+                                            isSelected
+                                                ? "#eff6ff"
+                                                : isBest
+                                                    ? "#ecfdf5"
+                                                    : "#fafafa"
+                                    }}
+                                >
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+                                            Route {r.id}
+                                            {isBest ? (
+                                                <span style={{ fontSize: "12px", background: "#dcfce7", color: "#16a34a", padding: "2px 8px", borderRadius: "10px", fontWeight: "600" }}>
+                                                    ⭐ Recommended Route
+                                                </span>
+                                            ) : (
+                                                <span style={{ fontSize: "12px", background: "#f1f5f9", color: "#475569", padding: "2px 8px", borderRadius: "10px", fontWeight: "600" }}>
+                                                    Alternative Route {altNumber}
+                                                </span>
+                                            )}
+                                        </h3>
+                                        {isSelected && (
+                                            <span style={{ fontSize: "12px", color: "#2563eb", fontWeight: "bold" }}>
+                                                ✓ Active on Map
+                                            </span>
+                                        )}
+                                    </div>
 
-                                    {route === `Route ${r.id}`
-                                        ? "⭐ Recommended Route"
-                                        : `Route ${r.id}`}
+                                    <p style={{ margin: "8px 0 4px" }}>
+                                        Distance :
+                                        <b> {r.distance} km</b>
+                                    </p>
 
-                                </h3>
-
-                                <p>
-
-                                    Distance :
-                                    <b> {r.distance} km</b>
-
-                                </p>
-
-                                <p>
-
-                                    Estimated Time :
-                                    <b> {r.duration} min</b>
-
-                                </p>
-
-                            </div>
-
-                        ))}
+                                    <p style={{ margin: 0 }}>
+                                        Estimated Time :
+                                        <b> {r.duration} min</b>
+                                    </p>
+                                </div>
+                            );
+                        })}
 
                     </div>
 
