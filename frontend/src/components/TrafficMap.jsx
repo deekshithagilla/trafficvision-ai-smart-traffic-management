@@ -8,15 +8,10 @@ import {
     Marker,
     Popup,
     Polyline,
-    CircleMarker,
     useMap
 } from "react-leaflet";
 
 import L from "leaflet";
-
-import HeatmapLayer from "./HeatmapLayer";
-
-import api from "../services/api";
 
 import "leaflet/dist/leaflet.css";
 
@@ -201,64 +196,6 @@ function TrafficMap({
         bestRouteIndex,
         setBestRouteIndex
     ] = useState(0);
-
-
-    // ==================================================
-    // BACKEND HEATMAP
-    // ==================================================
-
-    const [
-        heatPoints,
-        setHeatPoints
-    ] = useState([]);
-
-
-    // ==================================================
-    // LOAD BACKEND HEATMAP
-    // ==================================================
-
-    useEffect(() => {
-
-        async function loadHeatmap() {
-
-            try {
-
-                const response =
-                    await api.get(
-                        "/analytics/heatmap",
-                        {
-                            headers: {
-
-                                Authorization:
-                                    `Bearer ${localStorage.getItem(
-                                        "access_token"
-                                    )}`
-
-                            }
-                        }
-                    );
-
-
-                setHeatPoints(
-                    response.data || []
-                );
-
-
-            } catch (err) {
-
-                console.error(
-                    "Heatmap Error:",
-                    err
-                );
-
-            }
-
-        }
-
-
-        loadHeatmap();
-
-    }, []);
 
 
     // ==================================================
@@ -1043,97 +980,6 @@ function TrafficMap({
                     }
                 )}
 
-
-                {/* ==================================================
-                    TRAFFIC HOTSPOTS
-                ================================================== */}
-
-                {heatmap.map(
-                    (
-                        point,
-                        index
-                    ) => {
-
-                        const intensity =
-                            Number(
-                                point.intensity
-                            ) || 0;
-
-
-                        return (
-
-                            <CircleMarker
-
-                                key={
-                                    `hotspot-${index}`
-                                }
-
-                                center={[
-                                    Number(point.lat),
-                                    Number(point.lng)
-                                ]}
-
-
-                                radius={
-                                    6 +
-                                    intensity * 12
-                                }
-
-
-                                color={
-                                    intensity > 0.7
-                                        ? "#dc2626"
-                                        : intensity > 0.4
-                                            ? "#f59e0b"
-                                            : "#22c55e"
-                                }
-
-
-                                fillOpacity={0.8}
-
-                            >
-
-                                <Popup>
-
-                                    <b>
-                                        🚦 Traffic Hotspot
-                                    </b>
-
-                                    <br />
-
-                                    Intensity:
-
-                                    {" "}
-
-                                    {(
-                                        intensity * 100
-                                    ).toFixed(0)}
-
-                                    %
-
-                                </Popup>
-
-                            </CircleMarker>
-
-                        );
-
-                    }
-                )}
-
-
-                {/* ==================================================
-                    BACKEND HEATMAP
-                ================================================== */}
-
-                {heatPoints.length > 0 && (
-
-                    <HeatmapLayer
-                        points={
-                            heatPoints
-                        }
-                    />
-
-                )}
 
             </MapContainer>
 
