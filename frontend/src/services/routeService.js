@@ -307,43 +307,57 @@ function deduplicateRoutes(
 
 export async function getCoordinates(place) {
 
-    const response =
-        await axios.get(
+    // 1. Try Nominatim (OpenStreetMap)
+    try {
+        const response = await axios.get(
             NOMINATIM_URL,
             {
                 params: {
                     q: place,
                     format: "json",
                     limit: 1
-                }
+                },
+                timeout: 5000
             }
         );
 
-
-    if (
-        response.data.length === 0
-    ) {
-
-        throw new Error(
-            `Location not found: ${place}`
-        );
-
+        if (response.data && response.data.length > 0) {
+            return {
+                lat: parseFloat(response.data[0].lat),
+                lng: parseFloat(response.data[0].lon)
+            };
+        }
+    } catch (nomErr) {
+        console.warn("Nominatim geocoding error or rate limit. Falling back to OpenRouteService...", nomErr);
     }
 
+    // 2. Fallback to OpenRouteService Geocoding (reliable, prevents 429 Network Error)
+    try {
+        const orsResponse = await axios.get(
+            "https://api.openrouteservice.org/geocode/search",
+            {
+                params: {
+                    api_key: ORS_API_KEY,
+                    text: place,
+                    size: 1
+                },
+                timeout: 5000
+            }
+        );
 
-    return {
+        const features = orsResponse.data?.features;
+        if (features && features.length > 0) {
+            const [lng, lat] = features[0].geometry.coordinates;
+            return {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng)
+            };
+        }
+    } catch (orsErr) {
+        console.error("OpenRouteService geocode fallback failed:", orsErr);
+    }
 
-        lat:
-            parseFloat(
-                response.data[0].lat
-            ),
-
-        lng:
-            parseFloat(
-                response.data[0].lon
-            )
-
-    };
+    throw new Error(`Location not found: "${place}". Please check the spelling or specify the city name.`);
 
 }
 
