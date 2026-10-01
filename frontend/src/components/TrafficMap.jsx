@@ -697,6 +697,29 @@ function TrafficMap({
                         }
 
 
+                        // ==================================================
+                        // SEAMLESS ROUTE POSITIONS
+                        // Ensure polyline starts precisely at source marker pin
+                        // and ends precisely at destination marker pin with zero gap.
+                        // ==================================================
+                        const routePositions = (() => {
+                            if (!routeItem?.coordinates || routeItem.coordinates.length === 0) return [];
+                            const coords = [...routeItem.coordinates];
+                            if (source?.lat && source?.lng) {
+                                const srcPoint = [Number(source.lat), Number(source.lng)];
+                                if (coords[0][0] !== srcPoint[0] || coords[0][1] !== srcPoint[1]) {
+                                    coords.unshift(srcPoint);
+                                }
+                            }
+                            if (destination?.lat && destination?.lng) {
+                                const dstPoint = [Number(destination.lat), Number(destination.lng)];
+                                if (coords[coords.length - 1][0] !== dstPoint[0] || coords[coords.length - 1][1] !== dstPoint[1]) {
+                                    coords.push(dstPoint);
+                                }
+                            }
+                            return coords;
+                        })();
+
                         return (
 
                             <Polyline
@@ -706,7 +729,7 @@ function TrafficMap({
                                 }
 
                                 positions={
-                                    routeItem.coordinates
+                                    routePositions
                                 }
 
 

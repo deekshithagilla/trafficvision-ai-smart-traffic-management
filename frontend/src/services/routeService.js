@@ -301,11 +301,23 @@ function deduplicateRoutes(
 }
 
 
+// In-memory cache to prevent redundant network calls and 429 rate limits
+const geocodeCache = new Map();
+
 // ======================================================
 // CONVERT PLACE NAME TO LATITUDE / LONGITUDE
 // ======================================================
 
 export async function getCoordinates(place) {
+
+    if (!place || typeof place !== "string") {
+        throw new Error("Invalid place name provided");
+    }
+
+    const cacheKey = place.trim().toLowerCase();
+    if (geocodeCache.has(cacheKey)) {
+        return geocodeCache.get(cacheKey);
+    }
 
     // 1. Try Nominatim (OpenStreetMap)
     try {
@@ -317,15 +329,20 @@ export async function getCoordinates(place) {
                     format: "json",
                     limit: 1
                 },
+                headers: {
+                    "Accept-Language": "en"
+                },
                 timeout: 5000
             }
         );
 
         if (response.data && response.data.length > 0) {
-            return {
+            const result = {
                 lat: parseFloat(response.data[0].lat),
                 lng: parseFloat(response.data[0].lon)
             };
+            geocodeCache.set(cacheKey, result);
+            return result;
         }
     } catch (nomErr) {
         console.warn("Nominatim geocoding error or rate limit. Falling back to OpenRouteService...", nomErr);
@@ -339,7 +356,8 @@ export async function getCoordinates(place) {
                 params: {
                     api_key: ORS_API_KEY,
                     text: place,
-                    size: 1
+                    "boundary.country": "IND",
+                    size: 3
                 },
                 timeout: 5000
             }
@@ -348,10 +366,12 @@ export async function getCoordinates(place) {
         const features = orsResponse.data?.features;
         if (features && features.length > 0) {
             const [lng, lat] = features[0].geometry.coordinates;
-            return {
+            const result = {
                 lat: parseFloat(lat),
                 lng: parseFloat(lng)
             };
+            geocodeCache.set(cacheKey, result);
+            return result;
         }
     } catch (orsErr) {
         console.error("OpenRouteService geocode fallback failed:", orsErr);
@@ -360,6 +380,7 @@ export async function getCoordinates(place) {
     throw new Error(`Location not found: "${place}". Please check the spelling or specify the city name.`);
 
 }
+
 
 
 // ======================================================
